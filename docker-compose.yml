@@ -4,6 +4,8 @@ services:
     image: postgres:latest
     volumes:
       - ./api/pgdata:/var/lib/postgresql/data
+  redis:
+    image: redis:latest
   api:
     build:
       context: ./api
