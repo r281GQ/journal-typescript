@@ -5,16 +5,20 @@
   "author": "Endre Vegh",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.17.1",
     "pg": "^7.18.1",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.22"
   },
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "dev": "ts-node-dev src/index.ts"
   },
   "devDependencies": {
+    "@types/express": "^4.17.2",
     "@types/node": "^13.7.0",
     "ts-node": "^8.6.2",
+    "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.5"
   }
 }
