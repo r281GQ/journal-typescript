@@ -1,7 +1,15 @@
 {
   "name": "api",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "author": "Endre Vegh",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "pg": "^7.18.1",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.22"
+  },
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  }
 }
