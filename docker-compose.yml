@@ -1,5 +1,7 @@
 version: "3"
 services:
+  postgres:
+    image: postgres:latest
   api:
     build:
       context: ./api
@@ -7,3 +9,9 @@ services:
     volumes:
       - /app/node_modules
       - ./api:/app
+    environment:
+      - PGUSER="postgres"
+      - PGHOST="postgres"
+      - PGDATABASE="postgres"
+      - PGPASSWORD="postgres_password"
+      - PGPOR=5432
