@@ -66,7 +66,10 @@ const main = async () => {
       resolvers: [CreateUser]
     });
 
-    const apolloServer = new ApolloServer({ schema });
+    const apolloServer = new ApolloServer({
+      schema,
+      context: ({ req, res }) => ({ req, res })
+    });
 
     apolloServer.applyMiddleware({ app });
   } catch (e) {
