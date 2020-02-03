@@ -1,5 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
 import { ObjectType, Field, ID } from "type-graphql";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
+
+type Role = "ADMIN" | "USER";
 
 @ObjectType()
 @Entity()
@@ -8,6 +10,14 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ default: "USER" })
+  @Field()
+  role: Role;
+
+  @Field()
+  @Column("text", { unique: true })
+  email: string;
+
   @Field()
   @Column()
   firstName: string;
@@ -15,10 +25,6 @@ export class User extends BaseEntity {
   @Field()
   @Column()
   lastName: string;
-
-  @Field()
-  @Column("text", { unique: true })
-  email: string;
 
   @Column()
   password: string;
