@@ -1,12 +1,20 @@
-# Specify a base image
-FROM node:alpine
+# we should have a fully fledged linux
+FROM node:12
 
 WORKDIR /app
 
-# Install some depenendencies
+# install node-gyp for bcrypt
+RUN npm install -g --force node-gyp
+
+# install some depenendencies
 COPY ./package.json ./
-RUN yarn install
+
+# bcrypt is a little b***h
+RUN yarn install && \
+  yarn remove bcrypt && \
+  yarn add bcrypt
+
 COPY . .
 
-# Default command
+# default command
 CMD ["yarn", "dev"]
