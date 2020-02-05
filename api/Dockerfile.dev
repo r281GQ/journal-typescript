@@ -11,8 +11,8 @@ COPY ./package.json ./
 
 # bcrypt is a little b***h
 RUN yarn install && \
-  yarn remove bcrypt && \
-  yarn add bcrypt
+  yarn remove bcrypt jsonwebtoken && \
+  yarn add bcrypt jsonwebtoken
 
 COPY . .
 
