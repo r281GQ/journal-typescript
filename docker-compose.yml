@@ -6,10 +6,21 @@ services:
       - ./api/pgdata:/var/lib/postgresql/data
   redis:
     image: redis:latest
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - ./web:/app
+    ports:
+      - 3000:3000
   api:
     build:
       context: ./api
       dockerfile: Dockerfile.dev
+    depends_on:
+      - db
     volumes:
       - /app/node_modules
       - ./api:/app
@@ -22,5 +33,9 @@ services:
       - PGPASSWORD=postgres_password
       - PGPORT=5432
       - SALT=1
+      - ACCESS_TOKEN_SECRET=secret
+      - ACCESS_TOKEN_EXPIRY=10d
+      - REFRESH_TOKEN_SECRET=secret
+      - REFRESH_TOKEN_EXPIRY=10d
     ports:
       - 4000:4000
