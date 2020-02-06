@@ -23,7 +23,7 @@ const LoginForm: React.FC = ({}) => {
   return (
     <>
       {data.users.map(user => (
-        <div>{user.id}</div>
+        <div key={user.id}>{user.id}</div>
       ))}
     </>
   );
