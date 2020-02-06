@@ -1,8 +1,12 @@
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 
+interface TempUser {
+  users: [{ id: number }];
+}
+
 const LoginForm: React.FC = ({}) => {
-  const { data, loading } = useQuery<{ users: [{ id: number }] }>(
+  const { data, loading } = useQuery<TempUser>(
     gql`
       {
         users {
