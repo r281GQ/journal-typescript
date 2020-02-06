@@ -16,6 +16,14 @@ import {
 } from "./Environment";
 import { reportBug } from "./utils/ReportBug";
 
+const whitelist = [
+  "http://localhost:3000",
+
+  "http://localhost:3050",
+
+  "http://localhost:4000"
+];
+
 const app = Express();
 
 const connectToRedis = () => {
@@ -68,10 +76,24 @@ const main = async () => {
 
     const apolloServer = new ApolloServer({
       schema,
-      context: ({ req, res }) => ({ req, res })
+      context: ({ req, res }) => {
+        return { req, res };
+      }
     });
 
-    apolloServer.applyMiddleware({ app });
+    apolloServer.applyMiddleware({
+      app,
+      cors: {
+        credentials: true,
+        origin: (origin, callback) => {
+          if (whitelist.indexOf(origin!) !== -1 || !origin) {
+            callback(null, true);
+          } else {
+            callback(new Error("Not allowed by CORS"));
+          }
+        }
+      }
+    });
   } catch (e) {
     reportBug(e);
   }
