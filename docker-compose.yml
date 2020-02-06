@@ -6,6 +6,16 @@ services:
       - ./api/pgdata:/var/lib/postgresql/data
   redis:
     image: redis:latest
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    depends_on:
+      - api
+      - web
+    ports:
+      - "3050:80"
   web:
     build:
       context: ./web
@@ -13,8 +23,6 @@ services:
     volumes:
       - /app/node_modules
       - ./web:/app
-    ports:
-      - 3000:3000
   api:
     build:
       context: ./api
@@ -37,5 +45,3 @@ services:
       - ACCESS_TOKEN_EXPIRY=10d
       - REFRESH_TOKEN_SECRET=secret
       - REFRESH_TOKEN_EXPIRY=10d
-    ports:
-      - 4000:4000
