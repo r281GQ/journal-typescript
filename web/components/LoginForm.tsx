@@ -1,4 +1,4 @@
-import { useUsersQuery } from "../src/generated/graphql";
+import { useUsersQuery } from "../generated/graphql";
 
 const LoginForm: React.FC = ({}) => {
   const { data, loading } = useUsersQuery();
