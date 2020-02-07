@@ -9,63 +9,6 @@ import { getDataFromTree } from "@apollo/react-ssr";
 import Head from "next/head";
 import fetch from "node-fetch";
 
-// function isNextPage<T>(
-//   component: React.ComponentType<T>,
-//   ssr: boolean
-// ): component is NextPage<T> {
-//   return typeof window === "undefined";
-// }
-
-// function withApollo(
-//   PageComponent: React.ComponentType,
-//   ssr: boolean
-// ): NextPage | React.ComponentType {
-//   const apolloClient = new ApolloClient({
-//     cache: new InMemoryCache(),
-//     link: new HttpLink({
-//       uri: `http://localhost:4000/graphql`,
-//       credentials: "include",
-//       fetch
-//     }),
-//     ssrMode: ssr
-//   });
-//   const HOC = props => {
-//     return (
-//       <ApolloProvider client={apolloClient}>
-//         <PageComponent {...props} />
-//       </ApolloProvider>
-//     );
-//   };
-
-//   // console.log("sdfsdfs");
-
-//   if (isNextPage(PageComponent, ssr)) {
-//     HOC.getInitialProps = async ({ AppTree }) => {
-//       // console.log("sdfs");
-//       try {
-//         let d = await getDataFromTree(
-//           <AppTree pageProps={{ apolloClient: apolloClient }} />
-//         );
-
-//         console.log("sfsdfsd");
-//         console.log(d);
-
-//         let f = apolloClient.cache.extract();
-//         console.log(f);
-//       } catch (e) {
-//         console.log(e);
-//         console.log("ppp");
-//       }
-
-//       return {};
-//     };
-
-//     return HOC;
-//   }
-
-//   return HOC;
-// }
-
 let globalApolloClient = null;
 
 /**
@@ -76,6 +19,7 @@ let globalApolloClient = null;
 export const withApollo = ({ ssr = true } = {}) => PageComponent => {
   const WithApollo = ({ apolloClient, apolloState, ...pageProps }) => {
     const client = apolloClient || initApolloClient(apolloState);
+
     return (
       <ApolloProvider client={client}>
         <PageComponent {...pageProps} />
@@ -144,9 +88,6 @@ export const withApollo = ({ ssr = true } = {}) => PageComponent => {
 
       // Extract query data from the Apollo store
       const apolloState = apolloClient.cache.extract();
-
-      console.log("apolloState");
-      console.log(apolloState);
 
       return {
         ...pageProps,
