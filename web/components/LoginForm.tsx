@@ -1,20 +1,7 @@
-import { useQuery } from "@apollo/client";
-import gql from "graphql-tag";
-
-interface TempUser {
-  users: [{ id: number }];
-}
+import { useUsersQuery } from "../src/generated/graphql";
 
 const LoginForm: React.FC = ({}) => {
-  const { data, loading } = useQuery<TempUser>(
-    gql`
-      {
-        users {
-          id
-        }
-      }
-    `
-  );
+  const { data, loading } = useUsersQuery();
 
   if (loading || !data) {
     return null;
@@ -23,7 +10,9 @@ const LoginForm: React.FC = ({}) => {
   return (
     <>
       {data.users.map(user => (
-        <div key={user.id}>{user.id}</div>
+        <div key={user.id}>
+          {user.id} {user.__typename}
+        </div>
       ))}
     </>
   );

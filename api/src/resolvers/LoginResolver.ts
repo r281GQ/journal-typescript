@@ -1,13 +1,17 @@
 import bcrypt from "bcrypt";
-import { Resolver, Mutation, Arg } from "type-graphql";
+import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
 
 import { User } from "../entities/User";
 import { LoginParams } from "./loginResolver/LoginParams";
+import { ApiContext } from "../types/ApiContext";
 
 @Resolver()
 export class LoginResolver {
   @Mutation(() => Boolean)
-  async login(@Arg("data") data: LoginParams): Promise<boolean> {
+  async login(
+    @Arg("data") data: LoginParams,
+    @Ctx() ctx: ApiContext
+  ): Promise<boolean> {
     try {
       const { email, password } = data;
 
