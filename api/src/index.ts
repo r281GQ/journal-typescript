@@ -40,7 +40,7 @@ app.use(
   })
 );
 
-app.get("/refresh_token", (request, response) => {
+app.get("/refresh_token", (_request, response) => {
   response.sendStatus(200);
 });
 

@@ -15,11 +15,13 @@ import { ApiContext } from "../types/ApiContext";
 import { createAccessToken } from "../utils/CreateAccessToken";
 import { JWT } from "./shared/JWT";
 
-const isAdmin: MiddlewareFn<ApiContext> = async (
+export const isAdmin: MiddlewareFn<ApiContext> = async (
   { args, info, context, root },
   next
 ) => {
   const header = context.req.headers["authorization"];
+
+  let bearer = header?.split(" ")[1];
 
   return next();
 };

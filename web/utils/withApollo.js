@@ -1,13 +1,16 @@
 import React from "react";
 import {
   ApolloClient,
-  InMemoryCache,
+  ApolloLink,
   ApolloProvider,
+  InMemoryCache,
   HttpLink
 } from "@apollo/client";
 import { getDataFromTree } from "@apollo/react-ssr";
 import Head from "next/head";
 import fetch from "node-fetch";
+
+import { getAccessToken } from "./accessToken";
 
 let globalApolloClient = null;
 
@@ -124,25 +127,34 @@ const initApolloClient = initialState => {
  * @param  {Object} [initialState={}]
  */
 const createApolloClient = (initialState = {}) => {
-  // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
-  return new ApolloClient({
-    ssrMode: typeof window === "undefined", // Disables forceFetch on the server (so queries are only run once)
-    link: new HttpLink({
-      uri:
-        typeof window === "undefined"
-          ? "http://192.168.0.106:3050/api"
-          : // ? "http://127.0.0.1:3000/graphql"
-            "http://localhost:3050/api", // Server URL (must be absolute)
-      // uri: "https://graphql.anilist.co", // Server URL (must be absolute)
-      credentials: "include", // Additional fetch() options like `credentials` or `headers`
-      headers: {
-        // "http-server --cors": "*"
-      },
-      fetch
-      // fetchOptions: {
+  const httpLink = new HttpLink({
+    uri:
+      typeof window === "undefined"
+        ? "http://192.168.0.106:3050/api"
+        : "http://localhost:3050/api",
+    credentials: "include",
+    fetch
+  });
 
-      // }
-    }),
+  const authLink = new ApolloLink((operation, forward) => {
+    const accessToken = getAccessToken();
+
+    if (accessToken) {
+      operation.setContext({
+        headers: {
+          authorization: `bearer ${accessToken}`
+        }
+      });
+    }
+
+    return forward(operation);
+  });
+
+  const link = ApolloLink.from([authLink, httpLink]);
+
+  return new ApolloClient({
+    ssrMode: typeof window === "undefined",
+    link,
     cache: new InMemoryCache().restore(initialState)
   });
 };
