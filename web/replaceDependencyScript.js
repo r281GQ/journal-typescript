@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-(function readWriteAsync() {
+(function replaceDependency() {
   fs.readFile(`generated/graphql.tsx`, "utf-8", function(err, data) {
     if (err) throw err;
 

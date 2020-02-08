@@ -2,6 +2,7 @@
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.32",
     "@apollo/react-ssr": "^4.0.0-beta.1",
+    "formik": "^2.1.4",
     "graphql": "^14.6.0",
     "graphql-tag": "^2.10.2",
     "next": "^9.2.1",
@@ -23,6 +24,6 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "gen": "graphql-codegen --config codegen.yml && node script.js"
+    "gen": "graphql-codegen --config codegen.yml && node replaceDependencyScript.js"
   }
 }
