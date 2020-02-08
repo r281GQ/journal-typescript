@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
+import cors from "cors";
 import Express from "express";
 import Redis from "ioredis";
 import { createConnection } from "typeorm";
@@ -13,7 +14,8 @@ import {
   PG_USER,
   PG_PASSWORD,
   PG_DATABASE,
-  PG_HOST
+  PG_HOST,
+  ENV
 } from "./Environment";
 import { reportBug } from "./utils/ReportBug";
 
@@ -24,6 +26,23 @@ const whitelist = [
 ];
 
 const app = Express();
+
+app.use(
+  cors({
+    credentials: true,
+    origin: (origin, callback) => {
+      if (whitelist.indexOf(origin!) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    }
+  })
+);
+
+app.get("/refresh_token", (request, response) => {
+  response.sendStatus(200);
+});
 
 const connectToRedis = () => {
   const redis = new Redis({
@@ -58,6 +77,10 @@ const connectToDatabase = async () => {
 
       retryAttempts--;
     } catch (e) {
+      if (ENV === "development" && /ECONNREFUSED/g.test(e.message)) {
+        await new Promise(resolve => setTimeout(() => resolve(), 10000));
+      }
+
       reportBug(e);
     }
   }
@@ -82,16 +105,7 @@ const main = async () => {
 
     apolloServer.applyMiddleware({
       app,
-      cors: {
-        credentials: true,
-        origin: (origin, callback) => {
-          if (whitelist.indexOf(origin!) !== -1 || !origin) {
-            callback(null, true);
-          } else {
-            callback(new Error("Not allowed by CORS"));
-          }
-        }
-      }
+      cors: false
     });
   } catch (e) {
     reportBug(e);
