@@ -1,20 +1,42 @@
-import { useUsersQuery } from "../generated/graphql";
+import { useLoginMutation } from "../generated/graphql";
 
-const LoginForm: React.FC = ({}) => {
-  const { data, loading } = useUsersQuery();
+import { useFormik } from "formik";
 
-  if (loading || !data) {
-    return null;
-  }
+const LoginForm = () => {
+  const [handler, { loading }] = useLoginMutation();
+
+  const { values, handleChange, handleSubmit } = useFormik({
+    initialValues: {
+      password: "",
+      email: ""
+    },
+    onSubmit: async values => {
+      try {
+        const result = await handler({
+          variables: {
+            data: values
+          }
+        });
+      } catch {}
+    }
+  });
 
   return (
-    <>
-      {data.users.map(user => (
-        <div key={user.id}>
-          {user.id} {user.__typename}
-        </div>
-      ))}
-    </>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <input name="email" value={values.email} onChange={handleChange} />
+      </div>
+      <div>
+        <input
+          name="password"
+          value={values.password}
+          type="password"
+          onChange={handleChange}
+        />
+      </div>
+      <button type="submit">submit</button>
+      {loading && <div>...</div>}
+    </form>
   );
 };
 

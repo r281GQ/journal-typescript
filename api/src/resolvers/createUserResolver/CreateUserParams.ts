@@ -19,6 +19,5 @@ export class CreateUserParams {
   lastName: string;
 
   @Field()
-  @Length(10, 25)
   password: string;
 }

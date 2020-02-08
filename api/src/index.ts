@@ -6,6 +6,7 @@ import { createConnection } from "typeorm";
 import { buildSchema } from "type-graphql";
 
 import { CreateUser } from "./resolvers/CreateUserResolver";
+import { LoginResolver } from "./resolvers/LoginResolver";
 import {
   REDIS_HOST,
   REDIS_PORT,
@@ -18,9 +19,7 @@ import { reportBug } from "./utils/ReportBug";
 
 const whitelist = [
   "http://localhost:3000",
-
   "http://localhost:3050",
-
   "http://localhost:4000"
 ];
 
@@ -71,7 +70,7 @@ const main = async () => {
     const redis = connectToRedis();
 
     const schema = await buildSchema({
-      resolvers: [CreateUser]
+      resolvers: [CreateUser, LoginResolver]
     });
 
     const apolloServer = new ApolloServer({
