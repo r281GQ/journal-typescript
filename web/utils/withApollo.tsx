@@ -4,23 +4,29 @@ import {
   ApolloLink,
   ApolloProvider,
   InMemoryCache,
-  HttpLink
+  HttpLink,
+  NormalizedCacheObject
 } from "@apollo/client";
 import { getDataFromTree } from "@apollo/react-ssr";
 import Head from "next/head";
 import fetch from "node-fetch";
 
 import { getAccessToken } from "./accessToken";
+import { NextPage, NextPageContext } from "next";
 
-let globalApolloClient = null;
+let globalApolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
 /**
  * Creates and provides the apolloContext
  * to a next.js PageTree. Use it by wrapping
  * your PageComponent via HOC pattern.
  */
-export const withApollo = ({ ssr = true } = {}) => PageComponent => {
-  const WithApollo = ({ apolloClient, apolloState, ...pageProps }) => {
+export const withApollo = ({ ssr = true } = {}) => (PageComponent: any) => {
+  const WithApollo: React.FC<{ apolloState?: any; apolloClient?: any }> = ({
+    apolloClient,
+    apolloState,
+    ...pageProps
+  }) => {
     const client = apolloClient || initApolloClient(apolloState);
 
     return (
@@ -42,8 +48,21 @@ export const withApollo = ({ ssr = true } = {}) => PageComponent => {
     WithApollo.displayName = `withApollo(${displayName})`;
   }
 
-  if (ssr || PageComponent.getInitialProps) {
-    WithApollo.getInitialProps = async ctx => {
+  // PageComponent.getInitialProps
+
+  const g = (k: any): k is NextPage => {
+    return k.getInitialProps;
+  };
+
+  if (ssr || g(PageComponent)) {
+    //  const H =  WithApollo as NextPage;
+
+    (WithApollo as NextPage<{
+      apolloState?: any;
+      apolloClient?: any;
+    }>).getInitialProps = async (
+      ctx: NextPageContext & { apolloClient: any }
+    ) => {
       const { AppTree } = ctx;
 
       // Initialize ApolloClient, add it to the ctx object so
@@ -107,7 +126,7 @@ export const withApollo = ({ ssr = true } = {}) => PageComponent => {
  * Creates or reuses apollo client in the browser.
  * @param  {Object} initialState
  */
-const initApolloClient = initialState => {
+const initApolloClient = (initialState?: any) => {
   // Make sure to create a new client for every server-side request so that data
   // isn't shared between connections (which would be bad)
   if (typeof window === "undefined") {
@@ -126,14 +145,14 @@ const initApolloClient = initialState => {
  * Creates and configures the ApolloClient
  * @param  {Object} [initialState={}]
  */
-const createApolloClient = (initialState = {}) => {
+const createApolloClient = (initialState: any = {}) => {
   const httpLink = new HttpLink({
     uri:
       typeof window === "undefined"
         ? "http://192.168.0.106:3050/api"
         : "http://localhost:3050/api",
     credentials: "include",
-    fetch
+    fetch: fetch as any
   });
 
   const authLink = new ApolloLink((operation, forward) => {
