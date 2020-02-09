@@ -1,8 +1,10 @@
 import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import Express from "express";
 import Redis from "ioredis";
+import { verify } from "jsonwebtoken";
 import { createConnection } from "typeorm";
 import { buildSchema } from "type-graphql";
 
@@ -15,9 +17,12 @@ import {
   PG_PASSWORD,
   PG_DATABASE,
   PG_HOST,
-  ENV
+  ENV,
+  REFRESH_TOKEN_SECRET
 } from "./Environment";
 import { reportBug } from "./utils/ReportBug";
+import { createAccessToken } from "./utils/CreateAccessToken";
+import { Payload } from "./types/apiContext/payload";
 
 const whitelist = [
   "http://localhost:3000",
@@ -40,8 +45,20 @@ app.use(
   })
 );
 
-app.get("/refresh_token", (_request, response) => {
-  response.sendStatus(200);
+app.use(cookieParser());
+
+app.post("/refresh_token", (request, response) => {
+  const jid: string | null = request.cookies["jid"];
+
+  if (jid) {
+    const payload = verify(jid, REFRESH_TOKEN_SECRET) as Payload;
+
+    return response.send({
+      token: createAccessToken(payload)
+    });
+  }
+
+  return response.sendStatus(401);
 });
 
 const connectToRedis = () => {

@@ -15,20 +15,34 @@ import { ApiContext } from "../types/ApiContext";
 import { createAccessToken } from "../utils/CreateAccessToken";
 import { JWT } from "./shared/JWT";
 
-export const isAdmin: MiddlewareFn<ApiContext> = async (
+const getAuthHeader = (context: ApiContext): string => {
+  try {
+    const header = context.req.headers["authorization"];
+
+    let bearer = header?.split(" ")[1];
+
+    if (!bearer) {
+      throw new Error("not authorized");
+    }
+
+    return bearer;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const isAuth: MiddlewareFn<ApiContext> = async (
   { args, info, context, root },
   next
 ) => {
-  const header = context.req.headers["authorization"];
-
-  let bearer = header?.split(" ")[1];
+  getAuthHeader(context);
 
   return next();
 };
 
 @Resolver()
 export class CreateUser {
-  @UseMiddleware(isAdmin)
+  @UseMiddleware(isAuth)
   @Query(() => [User])
   async users(): Promise<User[]> {
     return User.find();
