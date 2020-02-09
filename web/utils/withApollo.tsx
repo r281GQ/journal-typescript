@@ -8,11 +8,11 @@ import {
   NormalizedCacheObject
 } from "@apollo/client";
 import { getDataFromTree } from "@apollo/react-ssr";
-import Head from "next/head";
-import fetch from "node-fetch";
-
-import { getAccessToken } from "./accessToken";
 import { NextPage, NextPageContext } from "next";
+import Head from "next/head";
+import fetch from "isomorphic-unfetch";
+
+import { getAccessToken, setAccessToken } from "./accessToken";
 
 let globalApolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
@@ -24,9 +24,28 @@ let globalApolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 export const withApollo = ({ ssr = true } = {}) => (PageComponent: any) => {
   const WithApollo: React.FC<{
     apolloState?: any;
+    token?: string;
     apolloClient?: ApolloClient<NormalizedCacheObject>;
-  }> = ({ apolloClient, apolloState, ...pageProps }) => {
+  }> = ({ apolloClient, apolloState, token, ...pageProps }) => {
     const client = apolloClient || initApolloClient(apolloState);
+
+    let [loading, setLoading] = React.useState(() => {
+      return token ? false : true;
+    });
+
+    React.useEffect(() => {
+      fetch("http://localhost:3050/refresh_token", { method: "POST" })
+        .then(resp => resp.json() as Promise<{ token: string }>)
+        .then(json => {
+          setAccessToken(json.token);
+          setLoading(false);
+        })
+        .catch(console.log);
+    }, []);
+
+    if (loading) {
+      return null;
+    }
 
     return (
       <ApolloProvider client={client}>
@@ -47,8 +66,6 @@ export const withApollo = ({ ssr = true } = {}) => (PageComponent: any) => {
     WithApollo.displayName = `withApollo(${displayName})`;
   }
 
-  // PageComponent.getInitialProps
-
   const isPageComponentNextPage = (Component: any): Component is NextPage => {
     return !!Component.getInitialProps;
   };
@@ -59,10 +76,29 @@ export const withApollo = ({ ssr = true } = {}) => (PageComponent: any) => {
       apolloClient?: ApolloClient<NormalizedCacheObject>;
     }>).getInitialProps = async (
       ctx: NextPageContext & {
+        token?: string;
         apolloClient: ApolloClient<NormalizedCacheObject>;
       }
     ) => {
       const { AppTree } = ctx;
+
+      try {
+        const response = await fetch(
+          "http://192.168.0.106:3050/refresh_token",
+          {
+            credentials: "include",
+            referrer: "/refresh_token",
+            method: "POST",
+            headers: {
+              cookie: ctx.req!.headers.cookie!
+            }
+          }
+        );
+
+        const json = (await response.json()) as { token: string };
+
+        setAccessToken(json.token);
+      } catch {}
 
       // Initialize ApolloClient, add it to the ctx object so
       // we can use it in `PageComponent.getInitialProp`.
@@ -116,7 +152,8 @@ export const withApollo = ({ ssr = true } = {}) => (PageComponent: any) => {
 
       return {
         ...pageProps,
-        apolloState
+        apolloState,
+        token: getAccessToken()
       };
     };
   }
@@ -155,6 +192,9 @@ const createApolloClient = (initialState: any = {}) => {
         ? "http://192.168.0.106:3050/api"
         : "http://localhost:3050/api",
     credentials: "include",
+    headers: {
+      authorization: `bearer ${getAccessToken()}`
+    },
     fetch: fetch as any
   });
 

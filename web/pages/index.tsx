@@ -10,6 +10,9 @@ const Home = () => {
         <Link href="/register">
           <div>Register</div>
         </Link>
+        <Link href="/authcontent">
+          <div>auth</div>
+        </Link>
       </div>
       <div
         style={{
