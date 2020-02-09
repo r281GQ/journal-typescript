@@ -22,11 +22,10 @@ let globalApolloClient: ApolloClient<NormalizedCacheObject> | null = null;
  * your PageComponent via HOC pattern.
  */
 export const withApollo = ({ ssr = true } = {}) => (PageComponent: any) => {
-  const WithApollo: React.FC<{ apolloState?: any; apolloClient?: any }> = ({
-    apolloClient,
-    apolloState,
-    ...pageProps
-  }) => {
+  const WithApollo: React.FC<{
+    apolloState?: any;
+    apolloClient?: ApolloClient<NormalizedCacheObject>;
+  }> = ({ apolloClient, apolloState, ...pageProps }) => {
     const client = apolloClient || initApolloClient(apolloState);
 
     return (
@@ -50,18 +49,18 @@ export const withApollo = ({ ssr = true } = {}) => (PageComponent: any) => {
 
   // PageComponent.getInitialProps
 
-  const g = (k: any): k is NextPage => {
-    return k.getInitialProps;
+  const isPageComponentNextPage = (Component: any): Component is NextPage => {
+    return !!Component.getInitialProps;
   };
 
-  if (ssr || g(PageComponent)) {
-    //  const H =  WithApollo as NextPage;
-
+  if (ssr || isPageComponentNextPage(PageComponent)) {
     (WithApollo as NextPage<{
       apolloState?: any;
-      apolloClient?: any;
+      apolloClient?: ApolloClient<NormalizedCacheObject>;
     }>).getInitialProps = async (
-      ctx: NextPageContext & { apolloClient: any }
+      ctx: NextPageContext & {
+        apolloClient: ApolloClient<NormalizedCacheObject>;
+      }
     ) => {
       const { AppTree } = ctx;
 
@@ -71,7 +70,11 @@ export const withApollo = ({ ssr = true } = {}) => (PageComponent: any) => {
 
       // Run wrapped getInitialProps methods
       let pageProps = {};
-      if (PageComponent.getInitialProps) {
+
+      if (
+        isPageComponentNextPage(PageComponent) &&
+        PageComponent.getInitialProps
+      ) {
         pageProps = await PageComponent.getInitialProps(ctx);
       }
 
