@@ -1,44 +1,12 @@
 import bcrypt from "bcrypt";
-import {
-  Resolver,
-  Mutation,
-  Arg,
-  Query,
-  UseMiddleware,
-  MiddlewareFn
-} from "type-graphql";
+import { Resolver, Mutation, Arg, Query, UseMiddleware } from "type-graphql";
 
 import { User, Role } from "../entities/User";
 import { CreateUserParams } from "./createUserResolver/CreateUserParams";
 import { SALT } from "../Environment";
-import { ApiContext } from "../types/ApiContext";
 import { createAccessToken } from "../utils/CreateAccessToken";
 import { JWT } from "./shared/JWT";
-
-const getAuthHeader = (context: ApiContext): string => {
-  try {
-    const header = context.req.headers["authorization"];
-
-    let bearer = header?.split(" ")[1];
-
-    if (!bearer) {
-      throw new Error("not authorized");
-    }
-
-    return bearer;
-  } catch (e) {
-    throw e;
-  }
-};
-
-export const isAuth: MiddlewareFn<ApiContext> = async (
-  { args, info, context, root },
-  next
-) => {
-  getAuthHeader(context);
-
-  return next();
-};
+import { isAuth } from "../middlewares/isAuth";
 
 @Resolver()
 export class CreateUser {
