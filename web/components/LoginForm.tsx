@@ -1,8 +1,8 @@
 import * as React from "react";
-import { useLoginMutation } from "../generated/graphql";
-
 import { useFormik } from "formik";
-import { setAccessToken, getAccessToken } from "../utils/accessToken";
+
+import { useLoginMutation } from "../generated/graphql";
+import { setAccessToken } from "../utils/accessToken";
 
 const LoginForm = () => {
   const [handler, { loading }] = useLoginMutation();

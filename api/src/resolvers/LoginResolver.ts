@@ -33,7 +33,7 @@ export class LoginResolver {
       context.res.cookie(
         "jid",
         createRefreshToken({ user: { id: user.id, role: user.role } }),
-        { httpOnly: true, path: "/refresh_token" }
+        { httpOnly: true }
       );
 
       return {
