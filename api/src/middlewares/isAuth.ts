@@ -10,7 +10,7 @@ const getAuthHeader = (context: ApiContext): string => {
 
     const bearer = header?.split(" ")[1] || "";
 
-    verify(ACCESS_TOKEN_SECRET, bearer);
+    verify(bearer, ACCESS_TOKEN_SECRET);
 
     return bearer;
   } catch (e) {

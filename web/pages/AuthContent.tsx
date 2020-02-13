@@ -1,6 +1,6 @@
+import React from "react";
 import Link from "next/link";
 
-import { withApollo } from "../utils/withApollo";
 import { useUsersQuery } from "../generated/graphql";
 
 const AuthContent = () => {
@@ -28,4 +28,4 @@ const AuthContent = () => {
   );
 };
 
-export default withApollo({ ssr: true })(AuthContent);
+export default AuthContent;

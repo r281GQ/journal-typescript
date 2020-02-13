@@ -15,4 +15,4 @@ const Login = () => {
   );
 };
 
-export default withApollo({ ssr: true })(Login);
+export default Login;

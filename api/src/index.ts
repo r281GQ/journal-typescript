@@ -27,7 +27,8 @@ import { Payload } from "./types/apiContext/payload";
 const whitelist = [
   "http://localhost:3000",
   "http://localhost:3050",
-  "http://localhost:4000"
+  "http://localhost:4000",
+  "http://192.168.0.106:3050"
 ];
 
 const app = Express();

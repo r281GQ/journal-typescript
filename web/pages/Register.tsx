@@ -1,7 +1,6 @@
 import { useFormik } from "formik";
 
 import { useCreateUserMutation } from "../generated/graphql";
-import { withApollo } from "../utils/withApollo";
 
 const Register = () => {
   const [handler, { loading }] = useCreateUserMutation();
@@ -62,4 +61,4 @@ const Register = () => {
   );
 };
 
-export default withApollo({ ssr: true })(Register);
+export default Register;
