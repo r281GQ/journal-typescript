@@ -1,5 +1,7 @@
 import React from "react";
 import { ApolloProvider } from "@apollo/react-hooks";
+import { CacheProvider } from "@emotion/core";
+import { cache } from "emotion";
 import App from "next/app";
 
 import { withApollo } from "../utils/withApollo";
@@ -9,9 +11,11 @@ class MyApp extends App<any> {
     const { apolloClient, Component, pageProps } = this.props;
 
     return (
-      <ApolloProvider client={apolloClient}>
-        <Component {...pageProps} />
-      </ApolloProvider>
+      <CacheProvider value={cache}>
+        <ApolloProvider client={apolloClient}>
+          <Component {...pageProps} />
+        </ApolloProvider>
+      </CacheProvider>
     );
   }
 }
