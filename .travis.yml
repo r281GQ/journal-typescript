@@ -1,0 +1,18 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t dockerquark/journal-test -f ./web/Dockerfile.dev ./web
+
+script:
+  - docker run dockerquark/journal-test -it exec yarn test -- --coverage
+
+after_success:
+  - docker build -t dockerquark/journal-web-prod ./web
+  - docker build -t dockerquark/journal-api-prod ./api
+  - docker build -t dockerquark/journal-nginx-prod ./nginx
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push dockerquark/journal-web-prod
+  - docker push dockerquark/journal-api-prod
+  - docker push dockerquark/journal-nginx-prod
