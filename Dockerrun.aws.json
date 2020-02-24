@@ -1,4 +1,20 @@
 {
   "AWSEBDockerrunVersion": 2,
-  "containerDefinitions": []
+  "containerDefinitions": [
+    {
+      "name": "web",
+      "image": "dockerquark/journal-web-prod",
+      "hostname": "web"
+    },
+    {
+      "name": "api",
+      "image": "dockerquark/journal-api-prod",
+      "hostname": "api"
+    },
+    {
+      "name": "nginx",
+      "image": "dockerquark/journal-nginx-prod",
+      "hostname": "nginx"
+    }
+  ]
 }
