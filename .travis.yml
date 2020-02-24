@@ -6,7 +6,7 @@ before_install:
   - docker build -t dockerquark/journal-test -f ./web/Dockerfile.dev ./web
 
 script:
-  - docker run dockerquark/journal-test -it exec yarn test -- --coverage
+  - docker run dockerquark/journal-test exec yarn test -- --coverage
 
 after_success:
   - docker build -t dockerquark/journal-web-prod ./web
