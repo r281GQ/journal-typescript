@@ -18,10 +18,7 @@ const getAuthHeader = (context: ApiContext): string => {
   }
 };
 
-export const isAuth: MiddlewareFn<ApiContext> = async (
-  { args, info, context, root },
-  next
-) => {
+export const isAuth: MiddlewareFn<ApiContext> = async ({ context }, next) => {
   getAuthHeader(context);
 
   await next();
