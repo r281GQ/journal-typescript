@@ -4,17 +4,27 @@
     {
       "name": "web",
       "image": "dockerquark/journal-web-prod",
-      "hostname": "web"
+      "hostname": "web",
+      "essential": false,
+      "memory": 128
     },
     {
       "name": "api",
       "image": "dockerquark/journal-api-prod",
-      "hostname": "api"
+      "hostname": "api",
+      "essential": false
     },
     {
       "name": "nginx",
       "image": "dockerquark/journal-nginx-prod",
-      "hostname": "nginx"
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ],
+      "links": ["client", "api"]
     }
   ]
 }
