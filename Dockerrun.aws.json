@@ -12,7 +12,8 @@
       "name": "api",
       "image": "dockerquark/journal-api-prod",
       "hostname": "api",
-      "essential": false
+      "essential": false,
+      "memory": 128
     },
     {
       "name": "nginx",
