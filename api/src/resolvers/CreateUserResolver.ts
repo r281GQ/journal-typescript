@@ -4,7 +4,7 @@ import { Resolver, Mutation, Arg, Query, UseMiddleware } from "type-graphql";
 import { User, Role } from "../entities/User";
 import { CreateUserParams } from "./createUserResolver/CreateUserParams";
 import { SALT } from "../Environment";
-import { createAccessToken } from "../utils/CreateAccessToken";
+// import { createAccessToken } from "../utils/CreateAccessToken";
 import { JWT } from "./shared/JWT";
 import { isAuth } from "../middlewares/isAuth";
 
@@ -34,11 +34,13 @@ export class CreateUser {
         values.role = Role.ADMIN;
       }
 
-      const entity = User.create(values);
+      // const entity = User.create(values);
+      User.create(values);
 
-      const { id, role } = await entity.save();
+      // const { id, role } = await entity.save();
 
-      const token = createAccessToken({ user: { id, role } });
+      // const token = createAccessToken({ user: { id, role } });
+      const token = "";
 
       return { token };
     } catch (e) {
