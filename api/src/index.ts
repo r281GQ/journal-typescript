@@ -96,7 +96,7 @@ const connectToDatabase = async () => {
       //   entities: ["src/entities/*.*"]
       // });
       // connected = true;
-      // retryAttempts--;
+      retryAttempts--;
     } catch (e) {
       if (ENV === "development" && /ECONNREFUSED/g.test(e.message)) {
         await new Promise(resolve => setTimeout(() => resolve(), 10000));
