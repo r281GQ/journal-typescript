@@ -110,6 +110,8 @@ const main = async () => {
 
     const redis = connectToRedis();
 
+    console.log(redis);
+
     const schema = await buildSchema({
       resolvers: [CreateUser, LoginResolver]
     });
