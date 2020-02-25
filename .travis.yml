@@ -22,7 +22,7 @@ deploy:
   provider: elasticbeanstalk
   region: eu-west-2
   app: journal
-  environment: Journal-env
+  env: Journal-env
   bucket_name: elasticbeanstalk-eu-west-2-261235767811
   bucket_path: journal
   on:
