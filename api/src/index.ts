@@ -3,7 +3,7 @@ import { ApolloServer } from "apollo-server-express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import Express from "express";
-import Redis from "ioredis";
+// import Redis from "ioredis";
 import { verify } from "jsonwebtoken";
 import { createConnection } from "typeorm";
 import { buildSchema } from "type-graphql";
@@ -11,8 +11,8 @@ import { buildSchema } from "type-graphql";
 import { CreateUser } from "./resolvers/CreateUserResolver";
 import { LoginResolver } from "./resolvers/LoginResolver";
 import {
-  REDIS_HOST,
-  REDIS_PORT,
+  // REDIS_HOST,
+  // REDIS_PORT,
   PG_USER,
   PG_PASSWORD,
   PG_DATABASE,
@@ -62,14 +62,14 @@ app.post("/refresh_token", (request, response) => {
   return response.sendStatus(401);
 });
 
-const connectToRedis = () => {
-  const redis = new Redis({
-    host: REDIS_HOST,
-    port: REDIS_PORT
-  });
+// const connectToRedis = () => {
+//   const redis = new Redis({
+//     host: REDIS_HOST,
+//     port: REDIS_PORT
+//   });
 
-  return redis;
-};
+//   return redis;
+// };
 
 const connectToDatabase = async () => {
   let retryAttempts = 10;
@@ -108,9 +108,9 @@ const main = async () => {
   try {
     await connectToDatabase();
 
-    const redis = connectToRedis();
+    // const redis = connectToRedis();
 
-    console.log(redis);
+    // console.log(redis);
 
     const schema = await buildSchema({
       resolvers: [CreateUser, LoginResolver]
