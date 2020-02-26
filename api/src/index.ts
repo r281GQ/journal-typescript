@@ -114,15 +114,20 @@ const connectToDatabase = async () => {
       reportBug(e);
     }
   }
+  return null;
 };
 
 const main = async () => {
   try {
     let g = await connectToDatabase();
 
-    g?.query(
-      `CREATE TABLE "user" ("id" SERIAL NOT NULL, "role" text NOT NULL DEFAULT 'USER', "email" text NOT NULL, "firstName" character varying NOT NULL, "lastName" character varying NOT NULL, "password" character varying NOT NULL, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`
-    );
+    try {
+      await g?.query(
+        `kCREATE TABLE "user" ("id" SERIAL NOT NULL, "role" text NOT NULL DEFAULT 'USER', "email" text NOT NULL, "firstName" character varying NOT NULL, "lastName" character varying NOT NULL, "password" character varying NOT NULL, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))"`
+      );
+    } catch (e) {
+      console.log(e);
+    }
 
     // const redis = connectToRedis();
 
