@@ -87,9 +87,11 @@ const connectToDatabase = async () => {
 
   let connected: boolean = false;
 
+  console.log(PG_PASSWORD);
+
   while (retryAttempts > 0 && !connected) {
     try {
-      await createConnection({
+      let f = await createConnection({
         name: "default",
         type: "postgres",
         host: PG_HOST,
@@ -103,6 +105,7 @@ const connectToDatabase = async () => {
       });
       connected = true;
       retryAttempts--;
+      return f;
     } catch (e) {
       if (ENV === "development" && /ECONNREFUSED/g.test(e.message)) {
         await new Promise(resolve => setTimeout(() => resolve(), 10000));
@@ -115,7 +118,11 @@ const connectToDatabase = async () => {
 
 const main = async () => {
   try {
-    await connectToDatabase();
+    let g = await connectToDatabase();
+
+    g?.query(
+      `CREATE TABLE "user" ("id" SERIAL NOT NULL, "role" text NOT NULL DEFAULT 'USER', "email" text NOT NULL, "firstName" character varying NOT NULL, "lastName" character varying NOT NULL, "password" character varying NOT NULL, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`
+    );
 
     // const redis = connectToRedis();
 
