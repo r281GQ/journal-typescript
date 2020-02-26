@@ -28,7 +28,8 @@ const whitelist = [
   "http://localhost:3000",
   "http://localhost:3050",
   "http://localhost:4000",
-  "http://192.168.0.106:3050"
+  "http://192.168.0.106:3050",
+  "http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com/"
 ];
 
 console.log(PG_USER);
