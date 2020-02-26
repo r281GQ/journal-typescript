@@ -1,25 +1,30 @@
-import { verify } from "jsonwebtoken";
+// import { verify } from "jsonwebtoken";
 import { MiddlewareFn } from "type-graphql";
 
-import { ACCESS_TOKEN_SECRET } from "../Environment";
+// import { ACCESS_TOKEN_SECRET } from "../Environment";
 import { ApiContext } from "../types/ApiContext";
 
-const getAuthHeader = (context: ApiContext): string => {
-  try {
-    const header = context.req.headers["authorization"];
+// const getAuthHeader = (context: ApiContext): string => {
+//   try {
+//     const header = context.req.headers["authorization"];
 
-    const bearer = header?.split(" ")[1] || "";
+//     const bearer = header?.split(" ")[1] || "";
 
-    verify(bearer, ACCESS_TOKEN_SECRET);
+//     verify(bearer, ACCESS_TOKEN_SECRET);
 
-    return bearer;
-  } catch (e) {
-    throw new Error("not authorized");
-  }
-};
+//     return bearer;
+//   } catch (e) {
+//     throw new Error("not authorized");
+//   }
+// };
+// export const isAuth: MiddlewareFn<ApiContext> = async ({ context }, next) => {
+//   getAuthHeader(context);
 
-export const isAuth: MiddlewareFn<ApiContext> = async ({ context }, next) => {
-  getAuthHeader(context);
+//   await next();
+// };
+
+export const isAuth: MiddlewareFn<ApiContext> = async (_p, next) => {
+  // getAuthHeader(context);
 
   await next();
 };

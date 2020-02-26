@@ -5,7 +5,7 @@ import cors from "cors";
 import Express from "express";
 // import Redis from "ioredis";
 // import { verify } from "jsonwebtoken";
-// import { createConnection } from "typeorm";
+import { createConnection } from "typeorm";
 import { buildSchema } from "type-graphql";
 
 import { CreateUser } from "./resolvers/CreateUserResolver";
@@ -89,19 +89,19 @@ const connectToDatabase = async () => {
 
   while (retryAttempts > 0 && !connected) {
     try {
-      // await createConnection({
-      //   name: "default",
-      //   type: "postgres",
-      //   host: PG_HOST,
-      //   port: 5432,
-      //   username: PG_USER,
-      //   password: PG_PASSWORD,
-      //   database: PG_DATABASE,
-      //   synchronize: true,
-      //   logging: true,
-      //   entities: ["src/entities/*.*"]
-      // });
-      // connected = true;
+      await createConnection({
+        name: "default",
+        type: "postgres",
+        host: PG_HOST,
+        port: 5432,
+        username: PG_USER,
+        password: PG_PASSWORD,
+        database: PG_DATABASE,
+        synchronize: true,
+        logging: true,
+        entities: ["src/entities/*.*"]
+      });
+      connected = true;
       retryAttempts--;
     } catch (e) {
       if (ENV === "development" && /ECONNREFUSED/g.test(e.message)) {
