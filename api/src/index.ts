@@ -29,11 +29,11 @@ const whitelist = [
   "http://localhost:3050",
   "http://localhost:4000",
   "http://192.168.0.106:3050",
-  "http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com/",
+  "http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com",
   "http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com/graphql",
   "journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com/graphql"
 ];
-
+// http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com
 console.log(PG_USER);
 console.log(PG_PASSWORD);
 console.log(PG_DATABASE);
@@ -45,6 +45,8 @@ app.use(
   cors({
     credentials: true,
     origin: (origin, callback) => {
+      console.log(origin);
+      console.log(origin);
       console.log(origin);
       if (whitelist.indexOf(origin!) !== -1 || !origin) {
         callback(null, true);
