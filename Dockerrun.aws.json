@@ -13,14 +13,7 @@
       "image": "dockerquark/journal-api-prod",
       "hostname": "api",
       "essential": false,
-      "memory": 256
-    },
-    {
-      "name": "tlc",
-      "image": "dockerquark/journal-tlc-prod",
-      "hostname": "tlc",
-      "essential": false,
-      "memory": 128
+      "memory": 700
     },
     {
       "name": "nginx",
@@ -32,7 +25,7 @@
           "containerPort": 80
         }
       ],
-      "links": ["web", "api", "tlc"],
+      "links": ["web", "api"],
       "memory": 128
     }
   ]
