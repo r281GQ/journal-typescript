@@ -1,6 +1,6 @@
 import { sign } from "jsonwebtoken";
 import { ACCESS_TOKEN_SECRET, ACCESS_TOKEN_EXPIRY } from "../Environment";
-import { Payload } from "../types/apiContext/payload";
+import { Payload } from "../types/Payload";
 
 export const createAccessToken = (payload: Payload) => {
   const {

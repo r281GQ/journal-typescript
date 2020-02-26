@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Payload } from "./apiContext/payload";
+import { Payload } from "./Payload";
 
 export interface ApiContext {
   req: Request;

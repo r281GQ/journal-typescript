@@ -1,4 +1,4 @@
-import { Role } from "../../entities/User";
+import { Role } from "../entities/User";
 
 export interface Payload {
   user: {
