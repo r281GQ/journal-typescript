@@ -6,14 +6,14 @@
       "image": "dockerquark/journal-web-prod",
       "hostname": "web",
       "essential": false,
-      "memory": 100
+      "memory": 128
     },
     {
       "name": "api",
       "image": "dockerquark/journal-api-prod",
       "hostname": "api",
       "essential": false,
-      "memory": 800
+      "memory": 1024
     },
     {
       "name": "nginx",
@@ -26,7 +26,7 @@
         }
       ],
       "links": ["web", "api"],
-      "memory": 100
+      "memory": 128
     }
   ]
 }
