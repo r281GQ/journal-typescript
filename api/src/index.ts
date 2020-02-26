@@ -97,8 +97,8 @@ const connectToDatabase = async () => {
         username: PG_USER,
         password: PG_PASSWORD,
         database: PG_DATABASE,
-        synchronize: true,
-        logging: true,
+        synchronize: ENV === "development" ? true : false,
+        logging: ENV === "development" ? true : false,
         entities: ["src/entities/*.*"]
       });
       connected = true;
