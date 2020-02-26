@@ -7,6 +7,8 @@ WORKDIR /app
 # install some depenendencies
 COPY ./package.json ./
 
+RUN yarn install
+
 COPY . .
 
 # default command
