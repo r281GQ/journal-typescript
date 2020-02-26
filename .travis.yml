@@ -12,10 +12,12 @@ after_success:
   - docker build -t dockerquark/journal-web-prod ./web
   - docker build -t dockerquark/journal-api-prod ./api
   - docker build -t dockerquark/journal-nginx-prod ./nginx
+  - docker build -t dockerquark/journal-tlc-prod ./tlc
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker push dockerquark/journal-web-prod
   - docker push dockerquark/journal-api-prod
   - docker push dockerquark/journal-nginx-prod
+  - docker push dockerquark/journal-tlc-prod
 
 deploy:
   edge: true
