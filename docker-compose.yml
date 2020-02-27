@@ -2,6 +2,9 @@ version: "3"
 services:
   db:
     image: postgres:latest
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - ./api/pgdata:/var/lib/postgresql/data
   redis:

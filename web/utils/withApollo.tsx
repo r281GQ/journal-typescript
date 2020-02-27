@@ -64,21 +64,23 @@ export const withApollo = ({ ssr = true } = {}) => (PageComponent: any) => {
         const cookies = cookie.parse(req.headers.cookie || "");
 
         if (cookies.jid) {
-          const response = await fetch(
-            "http://192.168.0.106:3050/refresh_token",
-            {
-              method: "POST",
-              credentials: "include",
-              headers: {
-                cookie: "jid=" + cookies.jid
+          try {
+            const response = await fetch(
+              "http://192.168.0.106:3050/refresh_token",
+              {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                  cookie: "jid=" + cookies.jid
+                }
               }
-            }
-          );
-          const data = await response.json();
+            );
+            const data = await response.json();
 
-          if (!serverAccessToken) {
-            serverAccessToken = data.token;
-          }
+            if (!serverAccessToken) {
+              serverAccessToken = data.token;
+            }
+          } catch {}
         }
       }
 
