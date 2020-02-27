@@ -66,7 +66,8 @@ export const withApollo = ({ ssr = true } = {}) => (PageComponent: any) => {
         if (cookies.jid) {
           try {
             const response = await fetch(
-              "http://192.168.0.106:3050/refresh_token",
+              // "http://192.168.0.106:3050/refresh_token",
+              "http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com/refresh_token",
               {
                 method: "POST",
                 credentials: "include",
@@ -171,10 +172,11 @@ function initApolloClient(initState: any, serverAccessToken?: string) {
  * @param  {Object} config
  */
 function createApolloClient(initialState = {}, serverAccessToken?: string) {
+  // uri: isServer()
+  //   ? "http://192.168.0.106:3050/graphql"
+  //   : "http://localhost:3050/graphql",
   const httpLink = new HttpLink({
-    uri: isServer()
-      ? "http://192.168.0.106:3050/graphql"
-      : "http://localhost:3050/graphql",
+    uri: "http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com/graphql",
     credentials: "include",
     fetch
   });
@@ -200,10 +202,17 @@ function createApolloClient(initialState = {}, serverAccessToken?: string) {
       }
     },
     fetchAccessToken: () => {
-      return fetch("http://192.168.0.106:3050/refresh_token", {
-        method: "POST",
-        credentials: "include"
-      });
+      // return fetch("http://192.168.0.106:3050/refresh_token", {
+      //   method: "POST",
+      //   credentials: "include"
+      // });
+      return fetch(
+        "http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com/refresh_token",
+        {
+          method: "POST",
+          credentials: "include"
+        }
+      );
     },
     handleFetch: accessToken => {
       setAccessToken(accessToken);
