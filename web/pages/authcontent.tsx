@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useUsersQuery } from "../generated/graphql";
 
 const AuthContent = () => {
-  const { data, error } = useUsersQuery();
+  const { data } = useUsersQuery();
 
   return (
     <>
