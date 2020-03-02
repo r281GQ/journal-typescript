@@ -52,3 +52,4 @@ services:
       - ACCESS_TOKEN_EXPIRY=10d
       - REFRESH_TOKEN_SECRET=secret
       - REFRESH_TOKEN_EXPIRY=10d
+      - LOCAL_URL=http://192.168.0.106:3050
