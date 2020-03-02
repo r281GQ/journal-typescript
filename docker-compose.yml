@@ -26,6 +26,10 @@ services:
     volumes:
       - /app/node_modules
       - ./web:/app
+    environment:
+      - USE_STAGING=false
+      - LOCAL_URL=http://192.168.0.106:3050
+      - STAGING_URL=http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com
   api:
     build:
       context: ./api

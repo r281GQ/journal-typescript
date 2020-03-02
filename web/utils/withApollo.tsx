@@ -15,6 +15,26 @@ import { getAccessToken, setAccessToken } from "./accessToken";
 
 const isServer = () => typeof window === "undefined";
 
+const getAddress = (suffix?: string) => {
+  let uri = "";
+
+  const environment = process.env.NODE_ENV;
+
+  const shouldUseStaging = process.env.USE_STAGING;
+
+  if (environment === "development" && shouldUseStaging) {
+    uri = process.env.STAGING_URL! + suffix;
+  } else if (environment === "development" && isServer()) {
+    uri = process.env.LOCAL_URL! + suffix;
+  } else if (environment === "development" && !isServer()) {
+    uri = "http://localhost:3050" + suffix;
+  } else if (environment === "production") {
+    uri = process.env.STAGING_URL! + suffix;
+  }
+
+  return uri;
+};
+
 /**
  * Creates and provides the apolloContext
  * to a next.js PageTree. Use it by wrapping
@@ -65,17 +85,13 @@ export const withApollo = ({ ssr = true } = {}) => (PageComponent: any) => {
 
         if (cookies.jid) {
           try {
-            const response = await fetch(
-              // "http://192.168.0.106:3050/refresh_token",
-              "http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com/refresh_token",
-              {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                  cookie: "jid=" + cookies.jid
-                }
+            const response = await fetch(getAddress("/refresh_token"), {
+              method: "POST",
+              credentials: "include",
+              headers: {
+                cookie: "jid=" + cookies.jid
               }
-            );
+            });
             const data = await response.json();
 
             if (!serverAccessToken) {
@@ -175,8 +191,9 @@ function createApolloClient(initialState = {}, serverAccessToken?: string) {
   // uri: isServer()
   //   ? "http://192.168.0.106:3050/graphql"
   //   : "http://localhost:3050/graphql",
+
   const httpLink = new HttpLink({
-    uri: "http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com/graphql",
+    uri: getAddress("/graphql"),
     credentials: "include",
     fetch
   });
@@ -202,17 +219,10 @@ function createApolloClient(initialState = {}, serverAccessToken?: string) {
       }
     },
     fetchAccessToken: () => {
-      // return fetch("http://192.168.0.106:3050/refresh_token", {
-      //   method: "POST",
-      //   credentials: "include"
-      // });
-      return fetch(
-        "http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com/refresh_token",
-        {
-          method: "POST",
-          credentials: "include"
-        }
-      );
+      return fetch(getAddress("/refresh_token"), {
+        method: "POST",
+        credentials: "include"
+      });
     },
     handleFetch: accessToken => {
       setAccessToken(accessToken);
