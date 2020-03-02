@@ -1,21 +1,12 @@
 import bcrypt from "bcrypt";
-import {
-  Resolver,
-  Mutation,
-  Arg,
-  Query,
-  UseMiddleware,
-  Ctx
-} from "type-graphql";
+import { Resolver, Mutation, Arg, Query, UseMiddleware } from "type-graphql";
 
 import { User, Role } from "../entities/User";
 import { CreateUserParams } from "./createUserResolver/CreateUserParams";
 import { SALT } from "../Environment";
-import { createAccessToken } from "../utils/CreateAccessToken";
-import { JWT } from "./shared/JWT";
 import { isAuth } from "../middlewares/isAuth";
-import { ApiContext } from "../types/ApiContext";
-import { Payload } from "../types/Payload";
+import { JWT } from "./shared/JWT";
+import { createAccessToken } from "../utils/CreateAccessToken";
 
 @Resolver()
 export class CreateUser {
@@ -26,20 +17,11 @@ export class CreateUser {
   }
 
   @Mutation(() => JWT)
-  async createUser(
-    @Arg("data") data: CreateUserParams,
-    @Ctx() ctx: ApiContext
-  ): Promise<JWT> {
+  async createUser(@Arg("data") data: CreateUserParams): Promise<JWT> {
     try {
       const { firstName, lastName, email, password, admin } = data;
 
       const hashedPasswrod = await bcrypt.hash(password, SALT);
-
-      console.log(ctx);
-
-      const d: Payload | null = null;
-
-      console.log(d);
 
       const values = {
         firstName,
