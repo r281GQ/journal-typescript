@@ -24,6 +24,16 @@ const Home = () => {
       >
         <div style={{ display: "flex", justifyContent: "center" }}>
           home route
+          <button
+            onClick={() => {
+              fetch("http://localhost:3050/verify_email/3453", {
+                method: "POST",
+                credentials: "include"
+              });
+            }}
+          >
+            hit me
+          </button>
         </div>
       </div>
     </>
