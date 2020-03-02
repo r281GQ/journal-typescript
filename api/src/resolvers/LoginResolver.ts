@@ -6,7 +6,7 @@ import { LoginParams } from "./loginResolver/LoginParams";
 import { JWT } from "./shared/JWT";
 // import { createAccessToken } from "../utils/CreateAccessToken";
 import { ApiContext } from "../types/ApiContext";
-// import { createRefreshToken } from "../utils/CreateRefreshToken";
+import { createRefreshToken } from "../utils/CreateRefreshToken";
 
 @Resolver()
 export class LoginResolver {
@@ -32,8 +32,7 @@ export class LoginResolver {
 
       context.res.cookie(
         "jid",
-        "",
-        // createRefreshToken({ user: { id: user.id, role: user.role } }),
+        createRefreshToken({ user: { id: user.id, role: user.role } }),
         { httpOnly: true }
       );
 

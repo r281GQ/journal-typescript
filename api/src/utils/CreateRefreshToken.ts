@@ -1,6 +1,6 @@
 import { sign } from "jsonwebtoken";
 import { REFRESH_TOKEN_EXPIRY, REFRESH_TOKEN_SECRET } from "../Environment";
-import { Payload } from "../types/apiContext/payload";
+import { Payload } from "../types/Payload";
 
 export const createRefreshToken = (payload: Payload) => {
   const {

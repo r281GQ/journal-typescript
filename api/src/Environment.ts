@@ -22,3 +22,6 @@ export const PG_PORT = Number.parseInt(process.env.PGPORT!);
 // redis connection
 export const REDIS_HOST = process.env.REDISHOST!;
 export const REDIS_PORT = Number.parseInt(process.env.REDISPORT!);
+
+// utils
+export const LOCAL_URL = process.env.LOCAL_URL!;
