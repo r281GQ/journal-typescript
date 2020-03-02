@@ -1,22 +1,19 @@
 import * as React from "react";
 import { ApolloClient, NormalizedCache } from "apollo-boost";
-import { NextComponentType } from "next";
+import { NextComponentType, NextPageContext } from "next";
+import Router from "next/router";
 
 import { UsersQuery, UsersDocument } from "../generated/graphql";
 
 const withAuth = (Component: React.ComponentType) => {
   const AuthenticationComponent: NextComponentType<
-    {
+    NextPageContext & {
       apolloClient: ApolloClient<NormalizedCache>;
     },
     { authenticated: boolean },
     { authenticated: boolean }
   > = props => {
-    if (props.authenticated) {
-      return <Component {...props} />;
-    }
-
-    return <div>not authenticated</div>;
+    return <Component {...props} />;
   };
 
   AuthenticationComponent.getInitialProps = async context => {
@@ -26,6 +23,15 @@ const withAuth = (Component: React.ComponentType) => {
       });
       return { authenticated: data.errors?.length === 0 ? false : true };
     } catch {
+      const serverResponse = context.res;
+
+      if (serverResponse) {
+        serverResponse.writeHead(303, { Location: "/" });
+        serverResponse.end();
+      } else {
+        Router.replace("/");
+      }
+
       return { authenticated: false };
     }
   };
