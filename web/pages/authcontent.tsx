@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 
 import { useUsersQuery } from "../generated/graphql";
+import withAuth from "../utils/withAuth";
 
 const AuthContent = () => {
   const { data } = useUsersQuery();
@@ -28,4 +29,4 @@ const AuthContent = () => {
   );
 };
 
-export default AuthContent;
+export default withAuth(AuthContent);
