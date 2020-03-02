@@ -1,43 +1,36 @@
 import "reflect-metadata";
+
 import { ApolloServer } from "apollo-server-express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import Express from "express";
-// import Redis from "ioredis";
-// import { verify } from "jsonwebtoken";
+import Redis from "ioredis";
+import { verify } from "jsonwebtoken";
+import nodemailer from "nodemailer";
 import { createConnection } from "typeorm";
 import { buildSchema } from "type-graphql";
 
 import { CreateUser } from "./resolvers/CreateUserResolver";
 import { LoginResolver } from "./resolvers/LoginResolver";
 import {
-  // REDIS_HOST,
-  // REDIS_PORT,
-  PG_USER,
-  PG_PASSWORD,
+  ENV,
+  LOCAL_URL,
   PG_DATABASE,
   PG_HOST,
-  ENV
-  // REFRESH_TOKEN_SECRET
+  PG_PASSWORD,
+  PG_USER,
+  REDIS_HOST,
+  REDIS_PORT,
+  REFRESH_TOKEN_SECRET
 } from "./Environment";
 import { reportBug } from "./utils/ReportBug";
-// import { createAccessToken } from "./utils/CreateAccessToken";
-// import { Payload } from "./types/apiContext/payload";
+import { createAccessToken } from "./utils/CreateAccessToken";
+import { Payload } from "./types/Payload";
 
-const whitelist = [
-  "http://localhost:3000",
-  "http://localhost:3050",
-  "http://localhost:4000",
-  "http://192.168.0.106:3050",
-  "http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com",
-  "http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com/graphql",
-  "journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com/graphql"
-];
-// http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com
-console.log(PG_USER);
-console.log(PG_PASSWORD);
-console.log(PG_DATABASE);
-console.log(PG_HOST);
+const whitelist =
+  ENV === "development"
+    ? ["http://localhost:3050", LOCAL_URL]
+    : ["http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com"];
 
 const app = Express();
 
@@ -45,9 +38,6 @@ app.use(
   cors({
     credentials: true,
     origin: (origin, callback) => {
-      console.log(origin);
-      console.log(origin);
-      console.log(origin);
       if (whitelist.indexOf(origin!) !== -1 || !origin) {
         callback(null, true);
       } else {
@@ -59,39 +49,41 @@ app.use(
 
 app.use(cookieParser());
 
-app.post("/refresh_token", (_request, response) => {
-  // const jid: string | null = request.cookies["jid"];
+app.post("/verify_email/:id", (request, response) => {
+  return response.send(200);
+});
 
-  // if (jid) {
-  //   const payload = verify(jid, REFRESH_TOKEN_SECRET) as Payload;
+app.post("/refresh_token", (request, response) => {
+  const jid: string | null = request.cookies["jid"];
 
-  //   return response.send({
-  //     token: createAccessToken(payload)
-  //   });
-  // }
+  if (jid) {
+    const payload = verify(jid, REFRESH_TOKEN_SECRET) as Payload;
+
+    return response.send({
+      token: createAccessToken(payload)
+    });
+  }
 
   return response.sendStatus(401);
 });
 
-// const connectToRedis = () => {
-//   const redis = new Redis({
-//     host: REDIS_HOST,
-//     port: REDIS_PORT
-//   });
+const connectToRedis = () => {
+  const redis = new Redis({
+    host: REDIS_HOST,
+    port: REDIS_PORT
+  });
 
-//   return redis;
-// };
+  return redis;
+};
 
 const connectToDatabase = async () => {
   let retryAttempts = 10;
 
   let connected: boolean = false;
 
-  console.log(PG_PASSWORD);
-
   while (retryAttempts > 0 && !connected) {
     try {
-      let f = await createConnection({
+      const connection = await createConnection({
         name: "default",
         type: "postgres",
         host: PG_HOST,
@@ -103,10 +95,13 @@ const connectToDatabase = async () => {
         logging: ENV === "development" ? true : false,
         entities: ["src/entities/*.*"]
       });
+
       connected = true;
-      retryAttempts--;
-      return f;
+
+      return connection;
     } catch (e) {
+      retryAttempts--;
+
       if (ENV === "development" && /ECONNREFUSED/g.test(e.message)) {
         await new Promise(resolve => setTimeout(() => resolve(), 10000));
       }
@@ -119,19 +114,53 @@ const connectToDatabase = async () => {
 
 const main = async () => {
   try {
-    let g = await connectToDatabase();
+    const connection = await connectToDatabase();
 
     try {
-      await g?.query(
+      "use strict";
+
+      // async..await is not allowed in global scope, must use a wrapper
+      // Generate test SMTP service account from ethereal.email
+      // Only needed if you don't have a real mail account for testing
+      let testAccount = await nodemailer.createTestAccount();
+
+      // create reusable transporter object using the default SMTP transport
+      let transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+          user: testAccount.user, // generated ethereal user
+          pass: testAccount.pass // generated ethereal password
+        }
+      });
+
+      // send mail with defined transport object
+      let info = await transporter.sendMail({
+        from: '"Fred Foo 👻" <foo@example.com>', // sender address
+        to: "bar@example.com, baz@example.com", // list of receivers
+        subject: "Hello ✔", // Subject line
+        text: "Hello world?", // plain text body
+        html: "<b>Hello world?</b>" // html body
+      });
+
+      console.log("Message sent: %s", info.messageId);
+      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+      // Preview only available when sending through an Ethereal account
+      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+
+      await connection?.query(
         `kCREATE TABLE "user" ("id" SERIAL NOT NULL, "role" text NOT NULL DEFAULT 'USER', "email" text NOT NULL, "firstName" character varying NOT NULL, "lastName" character varying NOT NULL, "password" character varying NOT NULL, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))"`
       );
     } catch (e) {
       console.log(e);
     }
 
-    // const redis = connectToRedis();
+    const redis = connectToRedis();
 
-    // console.log(redis);
+    console.log(redis);
 
     const schema = await buildSchema({
       resolvers: [CreateUser, LoginResolver]
