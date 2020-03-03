@@ -38,6 +38,6 @@
     "build": "next build",
     "start": "next start",
     "test": "jest",
-    "gen": "graphql-codegen --config codegen.yml && node replaceDependencyScript.js"
+    "gen": "graphql-codegen --config codegen.yml"
   }
 }
