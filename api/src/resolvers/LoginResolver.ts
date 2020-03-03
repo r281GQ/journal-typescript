@@ -4,8 +4,8 @@ import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
 import { User } from "../entities/User";
 import { LoginParams } from "./loginResolver/LoginParams";
 import { JWT } from "./shared/JWT";
-// import { createAccessToken } from "../utils/CreateAccessToken";
 import { ApiContext } from "../types/ApiContext";
+import { createAccessToken } from "../utils/CreateAccessToken";
 import { createRefreshToken } from "../utils/CreateRefreshToken";
 
 @Resolver()
@@ -37,8 +37,7 @@ export class LoginResolver {
       );
 
       return {
-        token: ""
-        // token: createAccessToken({ user: { id: user.id, role: user.role } })
+        token: createAccessToken({ user: { id: user.id, role: user.role } })
       };
     } catch (e) {
       throw e;
