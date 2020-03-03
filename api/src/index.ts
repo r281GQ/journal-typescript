@@ -4,12 +4,11 @@ import { ApolloServer } from "apollo-server-express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import Express from "express";
-import Redis from "ioredis";
 import { verify } from "jsonwebtoken";
-import nodemailer from "nodemailer";
 import { createConnection } from "typeorm";
 import { buildSchema } from "type-graphql";
 
+import { User } from "./entities/User";
 import { CreateUser } from "./resolvers/CreateUserResolver";
 import { LoginResolver } from "./resolvers/LoginResolver";
 import {
@@ -19,12 +18,11 @@ import {
   PG_HOST,
   PG_PASSWORD,
   PG_USER,
-  REDIS_HOST,
-  REDIS_PORT,
   REFRESH_TOKEN_SECRET
 } from "./Environment";
-import { reportBug } from "./utils/ReportBug";
 import { createAccessToken } from "./utils/CreateAccessToken";
+import { getRedis } from "./utils/Redis";
+import { reportBug } from "./utils/ReportBug";
 import { Payload } from "./types/Payload";
 
 const whitelist =
@@ -49,8 +47,28 @@ app.use(
 
 app.use(cookieParser());
 
-app.post("/verify_email/:id", (request, response) => {
-  return response.send(200);
+app.get("/verify_email/:id", async (request, response) => {
+  try {
+    const idFromUrl = request.params["id"];
+
+    const redis = getRedis();
+
+    const userId = await redis.get(idFromUrl);
+
+    const user = await User.findOne({ where: { id: userId } });
+
+    if (!user) {
+      return response.send(401);
+    }
+
+    user.verified = true;
+
+    await user.save();
+
+    return response.send(200);
+  } catch (e) {
+    return response.send(500);
+  }
 });
 
 app.post("/refresh_token", (request, response) => {
@@ -66,15 +84,6 @@ app.post("/refresh_token", (request, response) => {
 
   return response.sendStatus(401);
 });
-
-const connectToRedis = () => {
-  const redis = new Redis({
-    host: REDIS_HOST,
-    port: REDIS_PORT
-  });
-
-  return redis;
-};
 
 const connectToDatabase = async () => {
   let retryAttempts = 10;
@@ -117,50 +126,12 @@ const main = async () => {
     const connection = await connectToDatabase();
 
     try {
-      "use strict";
-
-      // async..await is not allowed in global scope, must use a wrapper
-      // Generate test SMTP service account from ethereal.email
-      // Only needed if you don't have a real mail account for testing
-      let testAccount = await nodemailer.createTestAccount();
-
-      // create reusable transporter object using the default SMTP transport
-      let transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        auth: {
-          user: testAccount.user, // generated ethereal user
-          pass: testAccount.pass // generated ethereal password
-        }
-      });
-
-      // send mail with defined transport object
-      let info = await transporter.sendMail({
-        from: '"Fred Foo 👻" <foo@example.com>', // sender address
-        to: "bar@example.com, baz@example.com", // list of receivers
-        subject: "Hello ✔", // Subject line
-        text: "Hello world?", // plain text body
-        html: "<b>Hello world?</b>" // html body
-      });
-
-      console.log("Message sent: %s", info.messageId);
-      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-      // Preview only available when sending through an Ethereal account
-      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-      // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-
       await connection?.query(
         `kCREATE TABLE "user" ("id" SERIAL NOT NULL, "role" text NOT NULL DEFAULT 'USER', "email" text NOT NULL, "firstName" character varying NOT NULL, "lastName" character varying NOT NULL, "password" character varying NOT NULL, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))"`
       );
     } catch (e) {
       console.log(e);
     }
-
-    const redis = connectToRedis();
-
-    console.log(redis);
 
     const schema = await buildSchema({
       resolvers: [CreateUser, LoginResolver]
