@@ -10,7 +10,10 @@ export const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET!;
 export const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY!;
 
 // node.js environment
-export const ENV = process.env.NODE_ENV!;
+export const ENV = process.env.NODE_ENV! as
+  | "test"
+  | "development"
+  | "production";
 
 // db connection
 export const PG_USER = process.env.PGUSER!;
@@ -25,3 +28,4 @@ export const REDIS_PORT = Number.parseInt(process.env.REDISPORT!);
 
 // utils
 export const LOCAL_URL = process.env.LOCAL_URL!;
+export const STAGING_URL = process.env.STAGING_URL!;
