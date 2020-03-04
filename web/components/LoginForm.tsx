@@ -1,11 +1,16 @@
 import * as React from "react";
+
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
 
 import { useLoginMutation } from "../generated/graphql";
 import { setAccessToken } from "../utils/accessToken";
 
 const LoginForm = () => {
   const [handler, { loading }] = useLoginMutation();
+  const router = useRouter();
+
+  const origin = router.query.origin;
 
   const { values, handleChange, handleSubmit } = useFormik({
     initialValues: {
@@ -22,6 +27,10 @@ const LoginForm = () => {
 
         if (result.data) {
           setAccessToken(result.data.login.token);
+        }
+
+        if (origin && typeof origin === "string") {
+          router.push(origin);
         }
       } catch {}
     }
