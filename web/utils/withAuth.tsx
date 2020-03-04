@@ -1,38 +1,71 @@
 import * as React from "react";
+
 import { ApolloClient, NormalizedCache } from "apollo-boost";
 import { NextComponentType, NextPageContext } from "next";
 import Router from "next/router";
 
-import { UsersQuery, UsersDocument } from "../generated/graphql";
+import { MeDocument, MeQuery } from "../generated/graphql";
 
-const withAuth = (Component: React.ComponentType) => {
-  const AuthenticationComponent: NextComponentType<
-    NextPageContext & {
-      apolloClient: ApolloClient<NormalizedCache>;
-    },
-    { authenticated: boolean },
-    { authenticated: boolean }
-  > = props => {
+interface AuthHocOptions {
+  withEmailVerification?: boolean;
+}
+
+const withAuth = (Component: NextComponentType, options?: AuthHocOptions) => {
+  let optionsToUse: AuthHocOptions = {
+    withEmailVerification: true
+  };
+
+  if (options) {
+    optionsToUse = options;
+  }
+
+  const { withEmailVerification } = optionsToUse;
+
+  const AuthenticationComponent: NextComponentType<NextPageContext & {
+    apolloClient: ApolloClient<NormalizedCache>;
+  }> = props => {
     return <Component {...props} />;
   };
 
   AuthenticationComponent.getInitialProps = async context => {
-    try {
-      const data = await context.apolloClient.query<UsersQuery>({
-        query: UsersDocument
-      });
-      return { authenticated: data.errors?.length === 0 ? false : true };
-    } catch {
-      const serverResponse = context.res;
+    let originalPageProps = {};
 
-      if (serverResponse) {
-        serverResponse.writeHead(303, { Location: "/" });
-        serverResponse.end();
-      } else {
-        Router.replace("/");
+    try {
+      if (Component.getInitialProps) {
+        originalPageProps = await Component.getInitialProps(context);
       }
 
-      return { authenticated: false };
+      const result = await context.apolloClient.query<MeQuery>({
+        query: MeDocument
+      });
+
+      if (!result.data) {
+        throw new Error("Not authorized");
+      }
+
+      if (withEmailVerification && result.data && !result.data.me.verified) {
+        throw new Error("VERIFICATION");
+      }
+
+      return { ...originalPageProps };
+    } catch (e) {
+      const authorizationError = e.message.includes("Not authorized");
+
+      const redirectUrl = authorizationError
+        ? `/login?origin=${context.pathname}`
+        : `/emailverification?origin=${context.pathname}`;
+
+      if (context.res) {
+        context.res.writeHead(303, {
+          Location: redirectUrl
+        });
+
+        context.res.end();
+      } else {
+        Router.replace(redirectUrl);
+      }
+
+      return { ...originalPageProps };
     }
   };
 
