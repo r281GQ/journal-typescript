@@ -8,25 +8,27 @@ const AuthContent = () => {
   const { data } = useUsersQuery();
 
   return (
-    <>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateRows: "30px 1fr",
+        justifyItems: "center",
+        alignItems: "center",
+        minHeight: "100vh"
+      }}
+    >
       <Link href="/">
-        <div>home</div>
+        <a href="/"> go back home</a>
       </Link>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          minHeight: "100vh"
-        }}
-      >
-        <div>{JSON.stringify(data)}</div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          auth content
+      <div>
+        <div>
+          {data?.users.map(user => (
+            <div key={user.id}> {`id: ${user.id}, email: ${user.email}`} </div>
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default withAuth(AuthContent);
+export default withAuth(AuthContent, { withEmailVerification: false });
