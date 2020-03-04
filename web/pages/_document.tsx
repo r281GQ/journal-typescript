@@ -6,6 +6,9 @@ import Document, {
   NextScript
 } from "next/document";
 
+/**
+ * Sets up emotion with SSR hydration.
+ */
 class MyDocument extends Document<{ ids: string[]; css: string }> {
   render() {
     return (
