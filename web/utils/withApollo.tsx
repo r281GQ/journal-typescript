@@ -1,4 +1,5 @@
 import React from "react";
+
 import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
 import { ApolloLink } from "apollo-link";
@@ -12,28 +13,8 @@ import jwtDecode from "jwt-decode";
 import Head from "next/head";
 
 import { getAccessToken, setAccessToken } from "./accessToken";
-
-const isServer = () => typeof window === "undefined";
-
-const getAddress = (suffix?: string) => {
-  let uri = "";
-
-  const environment = process.env.NODE_ENV;
-
-  const shouldUseStaging = process.env.USE_STAGING;
-
-  if (environment === "development" && shouldUseStaging) {
-    uri = process.env.STAGING_URL! + suffix;
-  } else if (environment === "development" && isServer()) {
-    uri = process.env.LOCAL_URL! + suffix;
-  } else if (environment === "development" && !isServer()) {
-    uri = "http://localhost:3050" + suffix;
-  } else if (environment === "production") {
-    uri = process.env.STAGING_URL! + suffix;
-  }
-
-  return uri;
-};
+import { isServer } from "./isServer";
+import { getAddress } from "./getAddress";
 
 /**
  * Creates and provides the apolloContext
@@ -188,10 +169,6 @@ function initApolloClient(initState: any, serverAccessToken?: string) {
  * @param  {Object} config
  */
 function createApolloClient(initialState = {}, serverAccessToken?: string) {
-  // uri: isServer()
-  //   ? "http://192.168.0.106:3050/graphql"
-  //   : "http://localhost:3050/graphql",
-
   const httpLink = new HttpLink({
     uri: getAddress("/graphql"),
     credentials: "include",
@@ -250,7 +227,7 @@ function createApolloClient(initialState = {}, serverAccessToken?: string) {
   });
 
   return new ApolloClient({
-    ssrMode: typeof window === "undefined", // Disables forceFetch on the server (so queries are only run once)
+    ssrMode: isServer(),
     link: ApolloLink.from([refreshLink, authLink, errorLink, httpLink]),
     cache: new InMemoryCache().restore(initialState)
   });
