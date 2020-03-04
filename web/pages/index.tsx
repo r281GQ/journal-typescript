@@ -1,35 +1,17 @@
-import Link from "next/link";
+import Layout from "../components/Layout";
 
 const Home = () => {
   return (
-    <div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Link href="/login">
-          <div>Login</div>
-        </Link>
-        <Link href="/register">
-          <div>Register</div>
-        </Link>
-        <Link href="/authcontent">
-          <div>auth</div>
-        </Link>
-        <Link href="/emailcontent">
-          <div>email</div>
-        </Link>
-      </div>
+    <Layout>
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          minHeight: "100vh"
+          textAlign: "center"
         }}
       >
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          home route
-        </div>
+        <div>home</div>
+        <div>this route is accessible without logging in</div>
       </div>
-    </div>
+    </Layout>
   );
 };
 
