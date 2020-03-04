@@ -6,6 +6,9 @@ import { cache } from "emotion";
 import App from "next/app";
 
 import { withApollo } from "../utils/withApollo";
+import { normaliseCss } from "../utils/normaliseCss";
+
+normaliseCss();
 
 /**
  * Sets up emotion and apollo with SSR.
