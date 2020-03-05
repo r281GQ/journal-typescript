@@ -1,6 +1,17 @@
+import { useApolloClient } from "@apollo/react-hooks";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
-const Navigation = () => {
+import { useLogoutMutation } from "../generated/graphql";
+import { deleteAccessToken } from "../utils/accessToken";
+
+const Navigation: React.FC<{}> = props => {
+  const [logout] = useLogoutMutation();
+
+  const client = useApolloClient();
+
+  const { push } = useRouter();
+
   return (
     <div
       style={{
@@ -25,6 +36,19 @@ const Navigation = () => {
       <Link href="/emailcontent">
         <a href="/emailcontent">email</a>
       </Link>
+      <div
+        onClick={async () => {
+          await logout();
+
+          deleteAccessToken();
+
+          push("/");
+
+          await client.resetStore();
+        }}
+      >
+        logout
+      </div>
     </div>
   );
 };

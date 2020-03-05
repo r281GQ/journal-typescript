@@ -1,5 +1,9 @@
 let accessToken: string | null;
 
+export const deleteAccessToken = () => {
+  accessToken = null;
+};
+
 export const getAccessToken = () => {
   return accessToken;
 };

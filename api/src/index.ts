@@ -11,6 +11,7 @@ import { buildSchema } from "type-graphql";
 import { User } from "./entities/User";
 import { CreateUser } from "./resolvers/CreateUserResolver";
 import { LoginResolver } from "./resolvers/LoginResolver";
+import { LogoutResolver } from "./resolvers/LogoutResolver";
 import { Me } from "./resolvers/MeResolver";
 import { SendMail } from "./resolvers/SendEmailResolver";
 import { VerifyEmail } from "./resolvers/VerifyEmailresolver";
@@ -137,7 +138,14 @@ const main = async () => {
     }
 
     const schema = await buildSchema({
-      resolvers: [VerifyEmail, SendMail, CreateUser, LoginResolver, Me]
+      resolvers: [
+        VerifyEmail,
+        SendMail,
+        CreateUser,
+        LoginResolver,
+        Me,
+        LogoutResolver
+      ]
     });
 
     const apolloServer = new ApolloServer({
