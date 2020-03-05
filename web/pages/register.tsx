@@ -2,9 +2,17 @@ import { useFormik } from "formik";
 
 import Layout from "../components/Layout";
 import { useCreateUserMutation } from "../generated/graphql";
+import useLogout from "../hooks/Logout";
+import withAlreadyLoggedIn, {
+  AlreadyLoggedInComponent
+} from "../utils/withAlreadyLoggedIn";
 
-const Register = () => {
+const Register: AlreadyLoggedInComponent = props => {
+  const { alreadyLoggedIn } = props;
+
   const [handler, { loading }] = useCreateUserMutation();
+
+  const [logout] = useLogout({ redirect: "/register" });
 
   const { values, handleChange, handleSubmit } = useFormik({
     initialValues: {
@@ -24,6 +32,20 @@ const Register = () => {
       } catch {}
     }
   });
+
+  if (alreadyLoggedIn) {
+    return (
+      <Layout>
+        <div>
+          <div> seems like you already have an account you logged in with</div>
+          <div>if you wish to create a new one and log out, click below</div>
+          <div>
+            <button onClick={logout}>logout</button>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -75,4 +97,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default withAlreadyLoggedIn(Register);

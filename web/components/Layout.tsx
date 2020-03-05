@@ -1,16 +1,8 @@
-import { useApolloClient } from "@apollo/react-hooks";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import useLogout from "../hooks/Logout";
 
-import { useLogoutMutation } from "../generated/graphql";
-import { deleteAccessToken } from "../utils/accessToken";
-
-const Navigation: React.FC<{}> = props => {
-  const [logout] = useLogoutMutation();
-
-  const client = useApolloClient();
-
-  const { push } = useRouter();
+const Navigation: React.FC = () => {
+  const [logout] = useLogout();
 
   return (
     <div
@@ -38,13 +30,9 @@ const Navigation: React.FC<{}> = props => {
       </Link>
       <div
         onClick={async () => {
-          await logout();
-
-          deleteAccessToken();
-
-          push("/");
-
-          await client.resetStore();
+          try {
+            await logout();
+          } catch {}
         }}
       >
         logout

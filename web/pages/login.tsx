@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import { useLoginMutation } from "../generated/graphql";
 import { setAccessToken } from "../utils/accessToken";
+import withAlreadyLoggedIn from "../utils/withAlreadyLoggedIn";
 
 const Login = () => {
   const [handler, { loading }] = useLoginMutation();
@@ -32,6 +33,8 @@ const Login = () => {
 
         if (origin && typeof origin === "string") {
           router.push(origin);
+        } else {
+          router.push("/authcontent");
         }
       } catch {}
     }
@@ -61,4 +64,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default withAlreadyLoggedIn(Login);
