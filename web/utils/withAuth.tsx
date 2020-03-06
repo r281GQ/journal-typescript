@@ -53,7 +53,7 @@ const withAuth = (Component: NextComponentType, options?: AuthHocOptions) => {
 
       const redirectUrl = authorizationError
         ? `/login?origin=${context.pathname}`
-        : `/emailverification?origin=${context.pathname}`;
+        : `/sendemail?origin=${context.pathname}`;
 
       if (context.res) {
         context.res.writeHead(303, {
