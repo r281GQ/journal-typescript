@@ -36,9 +36,13 @@ const Register: AlreadyLoggedInComponent = props => {
   if (alreadyLoggedIn) {
     return (
       <Layout>
-        <div>
-          <div> seems like you already have an account you logged in with</div>
-          <div>if you wish to create a new one and log out, click below</div>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ marginBottom: 16 }}>
+            seems like you already have an account you logged in with
+          </div>
+          <div style={{ marginBottom: 16 }}>
+            if you wish to create a new one and log out, click below
+          </div>
           <div>
             <button onClick={logout}>logout</button>
           </div>

@@ -3,9 +3,11 @@ import { NextPage, NextPageContext } from "next";
 
 import { MeDocument, MeQuery } from "../generated/graphql";
 
-export type AlreadyLoggedInComponent = React.ComponentType<{
-  alreadyLoggedIn: boolean;
-}>;
+export type AlreadyLoggedInComponent<P = {}> = React.ComponentType<
+  {
+    alreadyLoggedIn: boolean;
+  } & P
+>;
 
 const withAlreadyLoggedIn = (
   Component: AlreadyLoggedInComponent

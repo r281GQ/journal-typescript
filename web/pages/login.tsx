@@ -6,10 +6,16 @@ import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import { useLoginMutation } from "../generated/graphql";
 import { setAccessToken } from "../utils/accessToken";
-import withAlreadyLoggedIn from "../utils/withAlreadyLoggedIn";
+import withAlreadyLoggedIn, {
+  AlreadyLoggedInComponent
+} from "../utils/withAlreadyLoggedIn";
+import useLogout from "../hooks/Logout";
 
-const Login = () => {
+const Login: AlreadyLoggedInComponent = props => {
+  const { alreadyLoggedIn } = props;
+
   const [handler, { loading }] = useLoginMutation();
+  const [logout] = useLogout({ redirect: "/login" });
   const router = useRouter();
 
   const origin = router.query.origin;
@@ -39,6 +45,24 @@ const Login = () => {
       } catch {}
     }
   });
+
+  if (alreadyLoggedIn) {
+    return (
+      <Layout>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ marginBottom: 16 }}>
+            seems like you already have an account you logged in with
+          </div>
+          <div style={{ marginBottom: 16 }}>
+            if you wish to create a new one and log out, click below
+          </div>
+          <div>
+            <button onClick={logout}>logout</button>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

@@ -4,14 +4,16 @@ import { useRouter } from "next/router";
 import { useLogoutMutation, LogoutMutationResult } from "../generated/graphql";
 import { deleteAccessToken } from "../utils/accessToken";
 
-interface Options {
+interface LogoutOptions {
   redirect: string | null;
 }
 
+type LogoutFunction = () => Promise<void>;
+
 const useLogout = (
-  options?: Options
-): [() => Promise<void>, LogoutMutationResult] => {
-  let opt: Options = { redirect: "/" };
+  options?: LogoutOptions
+): [LogoutFunction, LogoutMutationResult] => {
+  let opt: LogoutOptions = { redirect: "/" };
 
   if (options) {
     opt = options;

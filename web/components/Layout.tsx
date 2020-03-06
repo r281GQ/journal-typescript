@@ -1,7 +1,10 @@
 import Link from "next/link";
+
 import useLogout from "../hooks/Logout";
+import { useMeQuery } from "../generated/graphql";
 
 const Navigation: React.FC = () => {
+  const { data } = useMeQuery();
   const [logout] = useLogout();
 
   return (
@@ -28,15 +31,17 @@ const Navigation: React.FC = () => {
       <Link href="/emailcontent">
         <a href="/emailcontent">email</a>
       </Link>
-      <div
-        onClick={async () => {
-          try {
-            await logout();
-          } catch {}
-        }}
-      >
-        logout
-      </div>
+      {data && data.me && (
+        <div
+          onClick={async () => {
+            try {
+              await logout();
+            } catch {}
+          }}
+        >
+          logout
+        </div>
+      )}
     </div>
   );
 };
