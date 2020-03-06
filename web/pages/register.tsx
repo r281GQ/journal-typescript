@@ -1,8 +1,10 @@
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
 
 import Layout from "../components/Layout";
 import { useCreateUserMutation } from "../generated/graphql";
 import useLogout from "../hooks/Logout";
+import { setAccessToken } from "../utils/accessToken";
 import withAlreadyLoggedIn, {
   AlreadyLoggedInComponent
 } from "../utils/withAlreadyLoggedIn";
@@ -14,6 +16,8 @@ const Register: AlreadyLoggedInComponent = props => {
 
   const [logout] = useLogout({ redirect: "/register" });
 
+  const { push } = useRouter();
+
   const { values, handleChange, handleSubmit } = useFormik({
     initialValues: {
       firstName: "",
@@ -24,11 +28,19 @@ const Register: AlreadyLoggedInComponent = props => {
     },
     onSubmit: async values => {
       try {
-        await handler({
+        const result = await handler({
           variables: {
             data: values
           }
         });
+
+        const token = result.data?.createUser.token;
+
+        if (token) {
+          setAccessToken(token);
+
+          push("/authcontent");
+        }
       } catch {}
     }
   });
