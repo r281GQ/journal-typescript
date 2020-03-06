@@ -22,7 +22,7 @@ export class SendMail {
 
     await redis.set(uu, `${ctx.payload.user.id}`);
 
-    const url = createUrl(`/verify_email/${uu}`);
+    const url = createUrl(`/emailverification?token=${uu}`);
 
     await sendMail(url);
 
