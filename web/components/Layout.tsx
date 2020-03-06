@@ -58,7 +58,7 @@ const Layout: React.FC = props => {
       }}
     >
       <Navigation />
-      {props.children}
+      <div>{props.children}</div>
     </div>
   );
 };
