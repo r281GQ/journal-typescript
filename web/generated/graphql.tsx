@@ -33,9 +33,9 @@ export type Mutation = {
    __typename?: 'Mutation',
   createUser: Jwt,
   login: Jwt,
+  logout: Scalars['Boolean'],
   sendMail: Scalars['Boolean'],
   verifyEmail: Scalars['Boolean'],
-  logout: Scalars['Boolean'],
 };
 
 
@@ -117,6 +117,14 @@ export type MeQuery = (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'email' | 'verified'>
   ) }
+);
+
+export type SendMailMutationVariables = {};
+
+
+export type SendMailMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'sendMail'>
 );
 
 export type UsersQueryVariables = {};
@@ -268,6 +276,35 @@ export function useMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptio
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
+export const SendMailDocument = gql`
+    mutation SendMail {
+  sendMail
+}
+    `;
+export type SendMailMutationFn = ApolloReactCommon.MutationFunction<SendMailMutation, SendMailMutationVariables>;
+
+/**
+ * __useSendMailMutation__
+ *
+ * To run a mutation, you first call `useSendMailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendMailMutation, { data, loading, error }] = useSendMailMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSendMailMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SendMailMutation, SendMailMutationVariables>) {
+        return ApolloReactHooks.useMutation<SendMailMutation, SendMailMutationVariables>(SendMailDocument, baseOptions);
+      }
+export type SendMailMutationHookResult = ReturnType<typeof useSendMailMutation>;
+export type SendMailMutationResult = ApolloReactCommon.MutationResult<SendMailMutation>;
+export type SendMailMutationOptions = ApolloReactCommon.BaseMutationOptions<SendMailMutation, SendMailMutationVariables>;
 export const UsersDocument = gql`
     query Users {
   users {
