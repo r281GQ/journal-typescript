@@ -6,12 +6,10 @@ import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import { useLoginMutation } from "../generated/graphql";
 import { setAccessToken } from "../utils/accessToken";
-import withAlreadyLoggedIn, {
-  AlreadyLoggedInComponent
-} from "../utils/withAlreadyLoggedIn";
+import withAlreadyLoggedIn from "../utils/withAlreadyLoggedIn";
 import useLogout from "../hooks/Logout";
 
-const Login: AlreadyLoggedInComponent = props => {
+const Login = withAlreadyLoggedIn(props => {
   const { alreadyLoggedIn } = props;
 
   const [handler, { loading }] = useLoginMutation();
@@ -86,6 +84,6 @@ const Login: AlreadyLoggedInComponent = props => {
       </form>
     </Layout>
   );
-};
+});
 
-export default withAlreadyLoggedIn(Login);
+export default Login;

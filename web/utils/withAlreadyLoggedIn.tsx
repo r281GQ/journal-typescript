@@ -1,24 +1,22 @@
 import { ApolloClient, NormalizedCache } from "apollo-boost";
-import { NextPage, NextPageContext } from "next";
+import { NextPageContext, NextComponentType } from "next";
 
 import { MeDocument, MeQuery } from "../generated/graphql";
 
-export type AlreadyLoggedInComponent<P = {}> = React.ComponentType<
-  {
-    alreadyLoggedIn: boolean;
-  } & P
->;
-
-const withAlreadyLoggedIn = (
-  Component: AlreadyLoggedInComponent
-): NextPage<{ alreadyLoggedIn: boolean }> => {
-  const ReturnComponent: NextPage<{ alreadyLoggedIn: boolean }> = props => {
-    return <Component {...props} />;
+function withAlreadyLoggedIn<P = {}>(
+  Component: React.ComponentType<{ alreadyLoggedIn: boolean } & P>
+) {
+  const ReturnComponent: NextComponentType<
+    NextPageContext & { apolloClient: ApolloClient<NormalizedCache> },
+    { alreadyLoggedIn: boolean },
+    { alreadyLoggedIn: boolean } & P
+  > = props => {
+    return <Component {...props} alreadyLoggedIn={props.alreadyLoggedIn} />;
   };
 
-  ReturnComponent.getInitialProps = async (
-    context: NextPageContext & { apolloClient: ApolloClient<NormalizedCache> }
-  ) => {
+  ReturnComponent.displayName = Component.displayName;
+
+  ReturnComponent.getInitialProps = async context => {
     let alreadyLoggedIn = false;
 
     try {
@@ -35,6 +33,6 @@ const withAlreadyLoggedIn = (
   };
 
   return ReturnComponent;
-};
+}
 
 export default withAlreadyLoggedIn;
