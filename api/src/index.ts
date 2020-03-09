@@ -6,15 +6,6 @@ import cors from "cors";
 import Express from "express";
 import { verify } from "jsonwebtoken";
 import { createConnection } from "typeorm";
-import { buildSchema } from "type-graphql";
-
-import { User } from "./entities/User";
-import { CreateUser } from "./resolvers/CreateUserResolver";
-import { LoginResolver } from "./resolvers/LoginResolver";
-import { LogoutResolver } from "./resolvers/LogoutResolver";
-import { Me } from "./resolvers/MeResolver";
-import { SendMail } from "./resolvers/SendEmailResolver";
-import { VerifyEmail } from "./resolvers/VerifyEmailresolver";
 import {
   ENV,
   LOCAL_URL,
@@ -24,8 +15,8 @@ import {
   PG_USER,
   REFRESH_TOKEN_SECRET
 } from "./Environment";
+import { createSchema } from "./utils/CreateSchema";
 import { createAccessToken } from "./utils/CreateAccessToken";
-import { getRedis } from "./utils/Redis";
 import { reportBug } from "./utils/ReportBug";
 import { Payload } from "./types/Payload";
 
@@ -50,30 +41,6 @@ app.use(
 );
 
 app.use(cookieParser());
-
-app.get("/verify_email/:id", async (request, response) => {
-  try {
-    const idFromUrl = request.params["id"];
-
-    const redis = getRedis();
-
-    const userId = await redis.get(idFromUrl);
-
-    const user = await User.findOne({ where: { id: userId } });
-
-    if (!user) {
-      return response.send(401);
-    }
-
-    user.verified = true;
-
-    await user.save();
-
-    return response.send(200);
-  } catch (e) {
-    return response.send(500);
-  }
-});
 
 app.post("/refresh_token", (request, response) => {
   const jid: string | null = request.cookies["jid"];
@@ -137,19 +104,8 @@ const main = async () => {
       console.log(e);
     }
 
-    const schema = await buildSchema({
-      resolvers: [
-        VerifyEmail,
-        SendMail,
-        CreateUser,
-        LoginResolver,
-        Me,
-        LogoutResolver
-      ]
-    });
-
     const apolloServer = new ApolloServer({
-      schema,
+      schema: await createSchema(),
       context: ({ req, res }) => {
         return { req, res };
       }
