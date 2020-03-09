@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useFormik } from "formik";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 import Layout from "../components/Layout";
@@ -76,6 +77,17 @@ const Login = withAlreadyLoggedIn(props => {
             type="password"
             onChange={handleChange}
           />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            margin: "16px 0"
+          }}
+        >
+          <Link href="/forgot_password">
+            <a href="/forgot_password">forgot password?</a>
+          </Link>
         </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <button type="submit">submit</button>

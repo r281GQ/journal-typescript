@@ -5,11 +5,9 @@ import Layout from "../components/Layout";
 import { useCreateUserMutation } from "../generated/graphql";
 import useLogout from "../hooks/Logout";
 import { setAccessToken } from "../utils/accessToken";
-import withAlreadyLoggedIn, {
-  AlreadyLoggedInComponent
-} from "../utils/withAlreadyLoggedIn";
+import withAlreadyLoggedIn from "../utils/withAlreadyLoggedIn";
 
-const Register: AlreadyLoggedInComponent = props => {
+const Register = withAlreadyLoggedIn(props => {
   const { alreadyLoggedIn } = props;
 
   const [handler, { loading }] = useCreateUserMutation();
@@ -111,6 +109,6 @@ const Register: AlreadyLoggedInComponent = props => {
       </div>
     </Layout>
   );
-};
+});
 
-export default withAlreadyLoggedIn(Register);
+export default Register;
