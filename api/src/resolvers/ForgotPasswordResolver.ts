@@ -33,7 +33,7 @@ export class ForgotPassword {
 
       await redis.set(token, email, "ex", 60 * 60);
 
-      const url = createUrl(`/forgot_password?token=${token}`);
+      const url = createUrl(`/reset_password?token=${token}`);
 
       await sendMail(url);
 
