@@ -20,6 +20,7 @@
     "react-dom": "^16.12.0"
   },
   "devDependencies": {
+    "@apollo/react-testing": "^3.1.3",
     "@graphql-codegen/cli": "^1.12.2",
     "@graphql-codegen/typescript": "1.12.2",
     "@graphql-codegen/typescript-operations": "1.12.2",
@@ -39,7 +40,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "test": "jest",
+    "test": "jest --watchAll",
     "gen": "graphql-codegen --config codegen.yml"
   }
 }
