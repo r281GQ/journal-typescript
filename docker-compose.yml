@@ -28,8 +28,7 @@ services:
       - ./web:/app
     environment:
       - USE_STAGING=false
-      # - LOCAL_URL=http://192.168.0.106:3050
-      - LOCAL_URL=http://192.168.43.169:3050
+      - LOCAL_URL=http://192.168.0.106:3050
       - STAGING_URL=http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com
   api:
     build:
@@ -53,5 +52,4 @@ services:
       - ACCESS_TOKEN_EXPIRY=10d
       - REFRESH_TOKEN_SECRET=secret
       - REFRESH_TOKEN_EXPIRY=10d
-      # - LOCAL_URL=http://192.168.0.106:3050
-      - LOCAL_URL=http://192.168.43.169:3050
+      - LOCAL_URL=http://192.168.0.106:3050
