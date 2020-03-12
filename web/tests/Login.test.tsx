@@ -12,7 +12,7 @@ interface Option {
   mocks: MockedResponse[];
 }
 
-function silentConsoleError() {
+function silenceConsoleError() {
   let originalConsoleError = console.error;
 
   return {
@@ -50,7 +50,7 @@ const wrapWithApollo = (
 };
 
 describe("<Login />", () => {
-  const { mockConsoleError, restoreConsoleError } = silentConsoleError();
+  const { mockConsoleError, restoreConsoleError } = silenceConsoleError();
 
   beforeAll(mockConsoleError);
 
@@ -141,7 +141,7 @@ describe("<Login />", () => {
 });
 
 describe("Login", () => {
-  const { mockConsoleError, restoreConsoleError } = silentConsoleError();
+  const { mockConsoleError, restoreConsoleError } = silenceConsoleError();
 
   beforeAll(mockConsoleError);
 
