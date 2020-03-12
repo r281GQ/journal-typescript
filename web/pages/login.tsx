@@ -13,11 +13,11 @@ import useLogout from "../hooks/Logout";
 const Login = withAlreadyLoggedIn(props => {
   const { alreadyLoggedIn } = props;
 
+  const router = useRouter();
   const [handler, { loading }] = useLoginMutation();
   const [logout] = useLogout({ redirect: "/login" });
-  const router = useRouter();
 
-  const origin = router.query.origin;
+  const origin = router.query?.origin;
 
   const { values, handleChange, handleSubmit } = useFormik({
     initialValues: {
@@ -41,7 +41,9 @@ const Login = withAlreadyLoggedIn(props => {
         } else {
           router.push("/authcontent");
         }
-      } catch {}
+      } catch (e) {
+        console.log(e);
+      }
     }
   });
 
@@ -66,12 +68,33 @@ const Login = withAlreadyLoggedIn(props => {
   return (
     <Layout>
       <form onSubmit={handleSubmit}>
-        <div style={{ textAlign: "center" }}>log in</div>
-        <div>
-          <input name="email" value={values.email} onChange={handleChange} />
-        </div>
-        <div>
+        <div style={{ textAlign: "center", marginBottom: 16 }}>log in</div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center"
+          }}
+        >
+          <label htmlFor="email">email</label>
           <input
+            id="email"
+            name="email"
+            value={values.email}
+            onChange={handleChange}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+
+            alignItems: "center"
+          }}
+        >
+          <label htmlFor="password">password</label>
+          <input
+            id="password"
             name="password"
             value={values.password}
             type="password"

@@ -20,10 +20,9 @@ const useLogout = (
   }
 
   const [logout, mutationInformation] = useLogoutMutation();
+  const { push } = useRouter();
 
   const client = useApolloClient();
-
-  const { push } = useRouter();
 
   const fn = async () => {
     try {
