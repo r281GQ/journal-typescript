@@ -1,60 +1,14 @@
-import { MockedProvider, MockedResponse, wait } from "@apollo/react-testing";
-import {
-  cleanup,
-  fireEvent,
-  render,
-  RenderResult
-} from "@testing-library/react";
+import { wait } from "@apollo/react-testing";
+import { cleanup, fireEvent } from "@testing-library/react";
 
-import { LoginDocument, MeDocument } from "../generated/graphql";
+import { LoginDocument } from "../../generated/graphql";
+import { wrapInApollo } from "../utils/wrapInApollo";
+import { silenceConsoleError } from "../utils/silenceConsoleError";
 
-interface Option {
-  mocks: MockedResponse[];
-}
+const LOGIN = "<Login />";
 
-function silenceConsoleError() {
-  let originalConsoleError = console.error;
-
-  return {
-    mockConsoleError() {
-      global.console = { ...global.console, error: jest.fn() };
-    },
-    restoreConsoleError() {
-      global.console = { ...global.console, error: originalConsoleError };
-    }
-  };
-}
-
-const wrapWithApollo = (
-  Component: React.ReactElement,
-  option?: Option
-): RenderResult => {
-  let opt: Option = {
-    mocks: [
-      {
-        request: {
-          query: MeDocument
-        },
-        result: {
-          data: null
-        }
-      }
-    ]
-  };
-
-  if (option) {
-    opt = option;
-  }
-
-  return render(<MockedProvider mocks={opt.mocks}>{Component}</MockedProvider>);
-};
-
-describe("<Login />", () => {
-  const { mockConsoleError, restoreConsoleError } = silenceConsoleError();
-
-  beforeAll(mockConsoleError);
-
-  afterAll(restoreConsoleError);
+describe("oooo", () => {
+  silenceConsoleError();
 
   afterEach(cleanup);
 
@@ -87,13 +41,13 @@ describe("<Login />", () => {
       };
     });
 
-    const Login = require("./../pages/login").default;
+    const Login = require("../../pages/login").default;
 
     const useRouter = require("next/router").useRouter;
 
     const router = useRouter();
 
-    const { queryByText, queryByLabelText } = wrapWithApollo(
+    const { queryByText, queryByLabelText } = wrapInApollo(
       <Login alreadyLoggedIn={false} />,
       {
         mocks: [
@@ -141,13 +95,13 @@ describe("<Login />", () => {
 });
 
 describe("Login", () => {
-  const { mockConsoleError, restoreConsoleError } = silenceConsoleError();
-
-  beforeAll(mockConsoleError);
-
-  afterAll(restoreConsoleError);
+  silenceConsoleError();
 
   afterEach(cleanup);
+
+  // beforeEach(() => {
+  //   jest.resetModules();
+  // });
 
   test("when logged in, the login form should not be visible", async () => {
     jest.mock("next/router", () => {
@@ -164,9 +118,9 @@ describe("Login", () => {
       };
     });
 
-    const Login = (await import("./../pages/login")).default;
+    const Login = (await import("../../pages/login")).default;
 
-    const { queryByText } = wrapWithApollo(<Login alreadyLoggedIn={true} />);
+    const { queryByText } = wrapInApollo(<Login alreadyLoggedIn={true} />);
 
     const submitButton = queryByText("submit");
 
