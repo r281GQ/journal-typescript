@@ -17,6 +17,7 @@ import {
 } from "./Environment";
 import { createSchema } from "./utils/CreateSchema";
 import { createAccessToken } from "./utils/CreateAccessToken";
+import { formatError } from "./utils/FormatError";
 import { reportBug } from "./utils/ReportBug";
 import { Payload } from "./types/Payload";
 
@@ -108,7 +109,8 @@ const main = async () => {
       schema: await createSchema(),
       context: ({ req, res }) => {
         return { req, res };
-      }
+      },
+      formatError: formatError
     });
 
     apolloServer.applyMiddleware({
