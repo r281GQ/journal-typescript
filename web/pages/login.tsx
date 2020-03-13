@@ -14,7 +14,7 @@ const Login = withAlreadyLoggedIn(props => {
   const { alreadyLoggedIn } = props;
 
   const router = useRouter();
-  const [handler, { loading }] = useLoginMutation();
+  const [handler, { loading, error }] = useLoginMutation();
   const [logout] = useLogout({ redirect: "/login" });
 
   const origin = router.query?.origin;
@@ -41,9 +41,7 @@ const Login = withAlreadyLoggedIn(props => {
         } else {
           router.push("/authcontent");
         }
-      } catch (e) {
-        console.log(e);
-      }
+      } catch {}
     }
   });
 
@@ -64,6 +62,8 @@ const Login = withAlreadyLoggedIn(props => {
       </Layout>
     );
   }
+
+  const e = error?.message.replace("GraphQL error: ", "");
 
   return (
     <Layout>
@@ -112,10 +112,21 @@ const Login = withAlreadyLoggedIn(props => {
             <a href="/forgot_password">forgot password?</a>
           </Link>
         </div>
+
+        {e && (
+          <div
+            style={{
+              color: "red",
+              margin: "16px 0"
+            }}
+          >
+            {e}
+          </div>
+        )}
         <div style={{ display: "flex", justifyContent: "center" }}>
           <button type="submit">submit</button>
         </div>
-        {loading && <div>...</div>}
+        {loading && <div style={{ textAlign: "center" }}>...</div>}
       </form>
     </Layout>
   );
