@@ -44,6 +44,7 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "resolutions": {
-    "acorn": "^7.1.1"
+    "acorn": "^7.1.1",
+    "minimist": "^1.2.2"
   }
 }
