@@ -42,5 +42,8 @@
     "start": "next start",
     "test": "jest --watchAll",
     "gen": "graphql-codegen --config codegen.yml"
+  },
+  "resolutions": {
+    "acorn": "^7.1.1"
   }
 }
