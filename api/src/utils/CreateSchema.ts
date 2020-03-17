@@ -8,7 +8,7 @@ import { LogoutResolver } from "../resolvers/LogoutResolver";
 import { Me } from "../resolvers/MeResolver";
 import { ResetPassword } from "../resolvers/ResetPasswordResolver";
 import { SendMail } from "../resolvers/SendEmailResolver";
-import { VerifyEmail } from "../resolvers/VerifyEmailresolver";
+import { VerifyEmail } from "../resolvers/VerifyEmailResolver";
 
 export const createSchema = async () => {
   const mutations = [
