@@ -21,3 +21,28 @@ spec:
           image: dockerquark/journal-api-prod
           ports:
             - containerPort: 5000
+          env:
+            - name: REDISHOST
+              value: redis
+            - name: REDISPORT
+              value: "6379"
+            - name: PGUSER
+              value: postgres
+            - name: PGDATABASE
+              value: postgres
+            - name: PGPASSWORD
+              value: postgres_password
+            - name: PGPORT
+              value: "5432"
+            - name: SALT
+              value: "1"
+            - name: ACCESS_TOKEN_EXPIRY
+              value: 10d
+            - name: ACCESS_TOKEN_SECRET
+              value: secret
+            - name: REFRESH_TOKEN_EXPIRY
+              value: 10d
+            - name: REFRESH_TOKEN_SECRET
+              value: secret
+            - name: LOCAL_URL
+              value: http://192.168.0.106:3050
