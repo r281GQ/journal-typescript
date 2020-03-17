@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # this is for logging / debugging
+  name: web-deployment
+spec:
+  # how many instances
+  replicas: 1
+  # this matches the pod label
+  selector:
+    matchLabels:
+      component: web
+  # this describes the pod definition
+  template:
+    metadata:
+      labels:
+        component: web
+    spec:
+      containers:
+        - name: client
+          image: dockerquark/journal-web-prod
+          ports:
+            - containerPort: 3000

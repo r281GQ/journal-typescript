@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # this is for logging / debugging
+  name: api-deployment
+spec:
+  # how many instances
+  replicas: 1
+  # this matches the pod label
+  selector:
+    matchLabels:
+      component: api
+  # this describes the pod definition
+  template:
+    metadata:
+      labels:
+        component: api
+    spec:
+      containers:
+        - name: client
+          image: dockerquark/journal-api-prod
+          ports:
+            - containerPort: 5000
