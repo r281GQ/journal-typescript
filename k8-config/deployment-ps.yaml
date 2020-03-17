@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # this is for logging / debugging
+  name: ps-deployment
+spec:
+  # how many instances
+  replicas: 1
+  # this matches the pod label
+  selector:
+    matchLabels:
+      component: ps
+  # this describes the pod definition
+  template:
+    metadata:
+      labels:
+        component: ps
+    spec:
+      containers:
+        - name: ps
+          image: postgres
+          ports:
+            - containerPort: 5432
