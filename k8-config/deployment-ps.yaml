@@ -16,6 +16,10 @@ spec:
       labels:
         component: ps
     spec:
+      volumens:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: ps-volume-claim
       containers:
         - name: ps
           image: postgres
