@@ -1,5 +1,6 @@
 import React from "react";
 
+import { getDataFromTree } from "@apollo/react-ssr";
 import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
 import { ApolloLink } from "apollo-link";
@@ -104,7 +105,6 @@ export const withApollo = ({ ssr = true } = {}) => (PageComponent: any) => {
         if (ssr) {
           try {
             // Run all GraphQL queries
-            const { getDataFromTree } = await import("@apollo/react-ssr");
 
             await getDataFromTree(
               <AppTree
