@@ -6,8 +6,8 @@ spec:
   type: ClusterIP
   ports:
     # other objects can reach via this port
-    - port: 5000
+    - port: 4000
       # this is the exposeed port within the object / container
-      targetPort: 5000
+      targetPort: 4000
   selector:
     component: api

@@ -21,3 +21,10 @@ spec:
           image: dockerquark/journal-web-prod
           ports:
             - containerPort: 3000
+          env:
+            - name: USE_STAGING
+              value: "false"
+            - name: LOCAL_URL
+              value: http://192.168.64.3
+            - name: STAGING_URL
+              value: http://192.168.64.3

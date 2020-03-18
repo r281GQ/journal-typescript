@@ -20,14 +20,16 @@ spec:
         - name: client
           image: dockerquark/journal-api-prod
           ports:
-            - containerPort: 5000
+            - containerPort: 4000
           env:
             - name: REDISHOST
-              value: redis
+              value: redis-cluster-ip
             - name: REDISPORT
               value: "6379"
             - name: PGUSER
               value: postgres
+            - name: PGHOST
+              value: ps-cluster-ip
             - name: PGDATABASE
               value: postgres
             - name: PGPASSWORD
@@ -45,4 +47,6 @@ spec:
             - name: REFRESH_TOKEN_SECRET
               value: secret
             - name: LOCAL_URL
-              value: http://192.168.0.106:3050
+              value: http://192.168.64.3
+            - name: SYNC
+              value: "true"

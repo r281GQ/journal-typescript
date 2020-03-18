@@ -9,19 +9,19 @@ spec:
   # this matches the pod label
   selector:
     matchLabels:
-      component: ps
+      component: postgres
   # this describes the pod definition
   template:
     metadata:
       labels:
-        component: ps
+        component: postgres
     spec:
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:
             claimName: ps-volume-claim
       containers:
-        - name: ps
+        - name: postgres
           image: postgres:latest
           ports:
             - containerPort: 5432
