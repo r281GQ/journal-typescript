@@ -43,7 +43,7 @@
     "ts-jest": "^25.2.1",
     "ts-node": "^8.6.2",
     "ts-node-dev": "^1.0.0-pre.44",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.3"
   },
   "resolutions": {
     "acorn": "^7.1.1"

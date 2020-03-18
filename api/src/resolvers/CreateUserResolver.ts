@@ -44,7 +44,7 @@ export class CreateUser {
         lastName,
         email,
         password: hashedPasswrod
-      } as any;
+      } as User;
 
       if (admin) {
         values.role = Role.ADMIN;
