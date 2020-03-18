@@ -13,7 +13,8 @@ import {
   PG_HOST,
   PG_PASSWORD,
   PG_USER,
-  REFRESH_TOKEN_SECRET
+  REFRESH_TOKEN_SECRET,
+  SYNC
 } from "./Environment";
 import { createSchema } from "./utils/CreateSchema";
 import { createAccessToken } from "./utils/CreateAccessToken";
@@ -75,7 +76,7 @@ const connectToDatabase = async () => {
         username: PG_USER,
         password: PG_PASSWORD,
         database: PG_DATABASE,
-        synchronize: ENV === "development" ? true : false,
+        synchronize: SYNC,
         logging: ENV === "development" ? true : false,
         entities: ["src/entities/*.*"]
       });

@@ -29,3 +29,4 @@ export const REDIS_PORT = Number.parseInt(process.env.REDISPORT!);
 // utils
 export const LOCAL_URL = process.env.LOCAL_URL!;
 export const STAGING_URL = process.env.STAGING_URL!;
+export const SYNC = process.env.SYNC === "true" ? true : false;
