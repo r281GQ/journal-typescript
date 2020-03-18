@@ -17,3 +17,7 @@ spec:
             backend:
               serviceName: api-cluster-ip
               servicePort: 4000
+          - path: /refresh_token
+            backend:
+              serviceName: api-cluster-ip
+              servicePort: 4000
