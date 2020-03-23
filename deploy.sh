@@ -12,4 +12,4 @@ docker push dockerquark/journal-api-prod:$SHA
 kubectl apply -f k8-config
 
 kubectl set image deployment/web-deployment client=dockerquark/journal-web-prod:$SHA
-kubectl set image deployment/web-deployment client=dockerquark/journal-api-prod:$SHA
+kubectl set image deployment/api-deployment client=dockerquark/journal-api-prod:$SHA
