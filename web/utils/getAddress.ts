@@ -14,6 +14,8 @@ export const getAddress = (suffix?: string) => {
   } else if (environment === "development" && !isServer()) {
     uri = "http://localhost:3050" + suffix;
   } else if (environment === "production") {
+    // uri = process.env.STAGING_URL! + suffix;
+    "http://http://34.76.185.55" + suffix;
     uri = process.env.STAGING_URL! + suffix;
   }
 

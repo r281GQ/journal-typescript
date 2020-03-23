@@ -24,10 +24,11 @@ import { Payload } from "./types/Payload";
 
 const whitelist =
   ENV === "development"
-    ? ["http://localhost:3050", LOCAL_URL]
+    ? ["http://localhost:3050", LOCAL_URL, "http://http://34.76.185.55/"]
     : [
         "http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com",
-        LOCAL_URL
+        LOCAL_URL,
+        "http://http://34.76.185.55/"
       ];
 
 const app = Express();
