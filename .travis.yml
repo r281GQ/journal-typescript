@@ -1,7 +1,5 @@
 sudo: required
 
-secure: "LG3XeYyQdw14RPzeTVQjfO7TtBn/s9k/RZbB4R83JRjqTi3RdJTBdMzwfcJTUK8SDn10wkjV2OH8Owa3tkE8i2XgQetvnOAZ8JIspashY4M/RAODBiFQfQZ49Y4RiUL3ovXuRQxgu+WMAEDE1P6MbZscDnp5104rCQQAyC25CfQcx5P6vHqaoxJ5qSUEwlao0RyCNLsZh+Fu/uZEuuM0AkbTBtEDxfO7RXj4V4Dq0/2Eckpeh+ny+Kdnw/Vz1/im69D+MPPXhrRtf67MH7AVZVdiqWyW9+7pbBSxpWB6Ajr8jzAYEX6t0R7u7Z8KX6KmpjF7fDLzB6UFjR0m8K8cUUXEsfWmK6B8d3Q+wU0JZsXyLeuPRlEi46pR4S6iYUkcbV7wd2kA5aYcQSIwwxqI8EHgJ6hasF125mBkCfuq/VrZY6niZKx8ljOA59p711YrkHcoUFlWyBw7D/1s9Pb0SzZknsA37EYnGP679H+RWjWbDOUgiJyVCrOe4cOlzFZ+/bKxzlATsGhNktD5y7X+pDsUq33I5omprsWlQ8PPk22iC4NeuQPnycfT5Y5PAb6gDaKkw3a9R7hUjyjEPnORdE/7pGGtvsguDqtQ3SAR3S+2myGKiuyDUHh1XfgTe+nTT2/AVPD7aNWBZT5gDqzA3KaMcoDHriYEFvRGLjg3vSY="
-
 services:
   - docker
 
@@ -11,6 +9,7 @@ env:
     - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 
 before_install:
+  - openssl aes-256-cbc -K $encrypted_0a6446eb3ae3_key -iv $encrypted_0a6446eb3ae3_iv -in service-account.json.enc -out service-account.json -d
   - curl https://sdk.cloud.google.com | bash > /dev/null;
   - source $HOME/google-cloud-sdk/path.bash.inc
   - gcloud components update kubectl
