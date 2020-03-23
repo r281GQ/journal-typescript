@@ -1,33 +1,55 @@
 sudo: required
+
+secure: "LG3XeYyQdw14RPzeTVQjfO7TtBn/s9k/RZbB4R83JRjqTi3RdJTBdMzwfcJTUK8SDn10wkjV2OH8Owa3tkE8i2XgQetvnOAZ8JIspashY4M/RAODBiFQfQZ49Y4RiUL3ovXuRQxgu+WMAEDE1P6MbZscDnp5104rCQQAyC25CfQcx5P6vHqaoxJ5qSUEwlao0RyCNLsZh+Fu/uZEuuM0AkbTBtEDxfO7RXj4V4Dq0/2Eckpeh+ny+Kdnw/Vz1/im69D+MPPXhrRtf67MH7AVZVdiqWyW9+7pbBSxpWB6Ajr8jzAYEX6t0R7u7Z8KX6KmpjF7fDLzB6UFjR0m8K8cUUXEsfWmK6B8d3Q+wU0JZsXyLeuPRlEi46pR4S6iYUkcbV7wd2kA5aYcQSIwwxqI8EHgJ6hasF125mBkCfuq/VrZY6niZKx8ljOA59p711YrkHcoUFlWyBw7D/1s9Pb0SzZknsA37EYnGP679H+RWjWbDOUgiJyVCrOe4cOlzFZ+/bKxzlATsGhNktD5y7X+pDsUq33I5omprsWlQ8PPk22iC4NeuQPnycfT5Y5PAb6gDaKkw3a9R7hUjyjEPnORdE/7pGGtvsguDqtQ3SAR3S+2myGKiuyDUHh1XfgTe+nTT2/AVPD7aNWBZT5gDqzA3KaMcoDHriYEFvRGLjg3vSY="
+
 services:
   - docker
 
+env:
+  global:
+    - SHA=$(git rev-parse HEAD)
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+
 before_install:
-  - docker build -t dockerquark/journal-test -f ./web/Dockerfile.dev ./web
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth active-service-account --key-file serveice-account.json
+  - gcloud config set project journal-271913
+  - gcloud config set compute/zone europe-west1-b
+  - gcloud container clusters get-credentials journal-cluster
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # - docker run dockerquark/journal-test yarn test -- --coverage
 
 script:
-  - docker run dockerquark/journal-test yarn test -- --coverage
-
-after_success:
-  - docker build -t dockerquark/journal-web-prod ./web
-  - docker build -t dockerquark/journal-api-prod ./api
-  - docker build -t dockerquark/journal-nginx-prod ./nginx
-  - docker build -t dockerquark/journal-tlc-prod ./tlc
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker push dockerquark/journal-web-prod
-  - docker push dockerquark/journal-api-prod
-  - docker push dockerquark/journal-nginx-prod
-  - docker push dockerquark/journal-tlc-prod
+  # - docker run dockerquark/journal-test yarn test -- --coverage
+  - ls
 
 deploy:
-  edge: true
-  provider: elasticbeanstalk
-  region: eu-west-2
-  app: journal
-  env: Journal-env
-  bucket_name: elasticbeanstalk-eu-west-2-261235767811
-  bucket_path: journal
+  provider: script
+  script: bash ./deploy.sh
   on:
     branch: master
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY
+# after_success:
+#   - docker build -t dockerquark/journal-web-prod ./web
+#   - docker build -t dockerquark/journal-api-prod ./api
+#   - docker build -t dockerquark/journal-nginx-prod ./nginx
+#   - docker build -t dockerquark/journal-tlc-prod ./tlc
+#   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+#   - docker push dockerquark/journal-web-prod
+#   - docker push dockerquark/journal-api-prod
+#   - docker push dockerquark/journal-nginx-prod
+#   - docker push dockerquark/journal-tlc-prod
+
+# deploy:
+#   edge: true
+#   provider: elasticbeanstalk
+#   region: eu-west-2
+#   app: journal
+#   env: Journal-env
+#   bucket_name: elasticbeanstalk-eu-west-2-261235767811
+#   bucket_path: journal
+#   on:
+#     branch: master
+#   access_key_id: $AWS_ACCESS_KEY
+#   secret_access_key: $AWS_SECRET_KEY
