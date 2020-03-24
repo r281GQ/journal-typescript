@@ -5,7 +5,7 @@ metadata:
 spec:
   secretName: journal-typescript-app
   issuerRef:
-    name: letsencrypt-pod
+    name: letsencrypt-prod
     kind: ClusterIssuer
   commonName: journal-typescript.app
   dnsNames:
