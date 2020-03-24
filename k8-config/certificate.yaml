@@ -1,0 +1,20 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadate:
+  name: journal-typescript-app-tls
+spec:
+  secretName: journal-typescript-app-tls
+  issuerRef:
+    name: letsencrypt-pod
+    kind: ClusterIssuer
+  commonName: journal-typescript.app
+  dnsNames:
+    - journal-typescript.app
+    - www.journal-typescript.app
+  acme:
+    config:
+      - http01:
+          ingressClass: nginx
+        domains:
+          - journal-typescript.app
+          - www.journal-typescript.app
