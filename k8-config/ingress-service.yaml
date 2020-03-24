@@ -4,10 +4,33 @@ metadata:
   name: ingress-service
   annotations:
     kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
     # nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  tls:
+    - hosts:
+        - journal-typescript.app
+        - www.journal-typescript.app
+      secretName: journal-typescript-app
   rules:
-    - http:
+    - host: journal-typescript.app
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: web-cluster-ip
+              servicePort: 3000
+          - path: /graphql
+            backend:
+              serviceName: api-cluster-ip
+              servicePort: 4000
+          - path: /refresh_token
+            backend:
+              serviceName: api-cluster-ip
+              servicePort: 4000
+    - host: www.journal-typescript.app
+      http:
         paths:
           - path: /
             backend:
