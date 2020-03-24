@@ -1,9 +1,9 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
-metadate:
+metadata:
   name: journal-typescript-app-tls
 spec:
-  secretName: journal-typescript-app-tls
+  secretName: journal-typescript-app
   issuerRef:
     name: letsencrypt-pod
     kind: ClusterIssuer
