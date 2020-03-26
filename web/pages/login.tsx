@@ -2,6 +2,7 @@ import React from "react";
 
 import { useFormik } from "formik";
 import Link from "next/link";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
 
 import Layout from "../components/Layout";
@@ -10,7 +11,7 @@ import { setAccessToken } from "../utils/accessToken";
 import withAlreadyLoggedIn from "../utils/withAlreadyLoggedIn";
 import useLogout from "../hooks/Logout";
 
-const Login = withAlreadyLoggedIn(props => {
+const Login: NextPage<{ alreadyLoggedIn: boolean }> = props => {
   const { alreadyLoggedIn } = props;
 
   const router = useRouter();
@@ -130,6 +131,6 @@ const Login = withAlreadyLoggedIn(props => {
       </form>
     </Layout>
   );
-});
+};
 
-export default Login;
+export default withAlreadyLoggedIn(Login);

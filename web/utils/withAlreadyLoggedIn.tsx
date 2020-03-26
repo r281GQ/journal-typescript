@@ -1,10 +1,10 @@
 import { ApolloClient, NormalizedCache } from "apollo-boost";
-import { NextPageContext, NextComponentType } from "next";
+import { NextPageContext, NextComponentType, NextPage } from "next";
 
 import { MeDocument, MeQuery } from "../generated/graphql";
 
 function withAlreadyLoggedIn<P = {}>(
-  Component: React.ComponentType<{ alreadyLoggedIn: boolean } & P>
+  Component: NextPage<{ alreadyLoggedIn: boolean } & P>
 ) {
   const ReturnComponent: NextComponentType<
     NextPageContext & { apolloClient: ApolloClient<NormalizedCache> },
@@ -17,6 +17,12 @@ function withAlreadyLoggedIn<P = {}>(
   ReturnComponent.displayName = Component.displayName;
 
   ReturnComponent.getInitialProps = async context => {
+    let ctx = {};
+
+    if (Component.getInitialProps) {
+      ctx = await Component.getInitialProps(context);
+    }
+
     let alreadyLoggedIn = false;
 
     try {
@@ -29,7 +35,7 @@ function withAlreadyLoggedIn<P = {}>(
       }
     } catch {}
 
-    return { alreadyLoggedIn };
+    return { ...ctx, alreadyLoggedIn };
   };
 
   return ReturnComponent;
