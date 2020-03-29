@@ -4,7 +4,7 @@ import { InputType, Field } from "type-graphql";
 @InputType()
 export class CreateUserParams {
   @Field({ nullable: true, defaultValue: false })
-  admin: boolean;
+  admin?: boolean;
 
   @Field()
   @IsEmail()

@@ -22,20 +22,14 @@ import { formatError } from "./utils/FormatError";
 import { reportBug } from "./utils/ReportBug";
 import { Payload } from "./types/Payload";
 
+const LOCAL_DEVELOPMENT = "http://localhost:3050";
+const DEPLOYEMNT = "https://journal-typescript.app";
+"dfsdfs;";
+
 const whitelist =
   ENV === "development"
-    ? [
-        "http://localhost:3050",
-        LOCAL_URL,
-        "http://34.76.185.55",
-        "https://journal-typescript.app"
-      ]
-    : [
-        "http://journal-env.rcpv566ppp.eu-west-2.elasticbeanstalk.com",
-        LOCAL_URL,
-        "http://34.76.185.55",
-        "https://journal-typescript.app"
-      ];
+    ? [LOCAL_DEVELOPMENT, DEPLOYEMNT]
+    : [LOCAL_DEVELOPMENT, DEPLOYEMNT];
 
 const app = Express();
 
