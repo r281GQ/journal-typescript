@@ -11,21 +11,20 @@ export const ERROR_MESSAGE_BODY_REQUIRED = "hey, please write something";
 export const ERROR_MESSAGE_TAGS_REQUIRED = "please, select at least one";
 export const ERROR_MESSAGE_TAGS_MAX = "please, have at most three";
 
-const validationSchema = Yup.object().shape({
-  title: Yup.string()
-    .required(ERROR_MESSAGE_TITLE_REQUIRED)
-    .min(3, ERROR_MESSAGE_TITLE_MIN)
-    .max(50, ERROR_MESSAGE_TITLE_MAX),
-  body: Yup.string().required(ERROR_MESSAGE_BODY_REQUIRED),
-  tags: Yup.array(Yup.string())
-    .required(ERROR_MESSAGE_TAGS_REQUIRED)
-    .max(3, ERROR_MESSAGE_TAGS_MAX)
-});
-
 const CreateEntry = () => {
   const formik = useFormik<{ title: string; body: string; tags: string[] }>({
     initialValues: { title: "", body: "", tags: [] },
-    validationSchema,
+    validationSchema: Yup.object().shape({
+      title: Yup.string()
+        .required(ERROR_MESSAGE_TITLE_REQUIRED)
+        .min(3, ERROR_MESSAGE_TITLE_MIN)
+        .max(50, ERROR_MESSAGE_TITLE_MAX),
+      body: Yup.string().required(ERROR_MESSAGE_BODY_REQUIRED),
+      tags: Yup.array(Yup.string())
+        .required(ERROR_MESSAGE_TAGS_REQUIRED)
+        .max(3, ERROR_MESSAGE_TAGS_MAX)
+    }),
+
     onSubmit: () => {}
   });
 
@@ -91,14 +90,7 @@ const CreateEntry = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           >
-            <option
-              onChange={e => {
-                console.log(e.target);
-              }}
-              value="react"
-            >
-              react
-            </option>
+            <option value="react">react</option>
             <option value="docker">docker</option>
             <option value="typescript">typescript</option>
             <option value="graphql">graphql</option>
