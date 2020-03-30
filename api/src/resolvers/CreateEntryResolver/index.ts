@@ -17,20 +17,30 @@ import {
   MaxLength
 } from "class-validator";
 
+export const ERROR_MESSAGE_TITLE_REQUIRED = "hey, please write something";
+export const ERROR_MESSAGE_TITLE_MIN = "should be a bit longer than that";
+export const ERROR_MESSAGE_TITLE_MAX =
+  "writing a novel? please make it shorter";
+
+export const ERROR_MESSAGE_BODY_REQUIRED = "hey, please write something";
+
+export const ERROR_MESSAGE_TAGS_REQUIRED = "please, select at least one";
+export const ERROR_MESSAGE_TAGS_MAX = "please, have at most three";
+
 @InputType()
 class CreateEntryParams {
   @Field()
-  @MinLength(2)
-  @MaxLength(50)
+  @MinLength(2, { message: ERROR_MESSAGE_TITLE_MIN })
+  @MaxLength(50, { message: ERROR_MESSAGE_TITLE_MAX })
   title: string;
 
   @Field()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: ERROR_MESSAGE_BODY_REQUIRED })
   body: string;
 
   @Field(() => [String])
-  @ArrayNotEmpty()
-  @ArrayMaxSize(3)
+  @ArrayNotEmpty({ message: ERROR_MESSAGE_TAGS_REQUIRED })
+  @ArrayMaxSize(3, { message: ERROR_MESSAGE_TAGS_MAX })
   tags: string[];
 }
 

@@ -1,10 +1,12 @@
 import { Connection } from "typeorm";
 import faker from "faker";
 
-import { createUser } from "../test-utils/createUser";
-import { testConn } from "../test-utils/testConn";
-import { executeGraphQL } from "../test-utils/gCall";
+import { ERROR_MESSAGE_TITLE_MIN } from "./CreateEntryResolver";
 import { AuthorizationError } from "../errors/AuthorizationError";
+import { createUser } from "../test-utils/createUser";
+import { getValidationError } from "../test-utils/getValidationError";
+import { executeGraphQL } from "../test-utils/gCall";
+import { testConn } from "../test-utils/testConn";
 
 let conn: Connection;
 
@@ -142,7 +144,7 @@ describe("CreateEntryResolver", () => {
     expect(typeof createUserResult === "string").toBe(true);
   });
 
-  test("validation - title - short", async () => {
+  test.only("validation - title - short", async () => {
     const createUserResult = await createUser();
 
     const source = `mutation CreateEntry($data: CreateEntryParams!) {
@@ -174,9 +176,9 @@ describe("CreateEntryResolver", () => {
       }
     });
 
-    expect(createEntryResult.errors).toBeTruthy();
+    const message = getValidationError(createEntryResult);
 
-    expect(typeof createUserResult === "string").toBe(true);
+    expect(message).toBe(ERROR_MESSAGE_TITLE_MIN);
   });
 
   test("validation - body", async () => {
