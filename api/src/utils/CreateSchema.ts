@@ -9,9 +9,11 @@ import { Me } from "../resolvers/MeResolver";
 import { ResetPassword } from "../resolvers/ResetPasswordResolver";
 import { SendMail } from "../resolvers/SendEmailResolver";
 import { VerifyEmail } from "../resolvers/VerifyEmailResolver";
+import { CreateEntry } from "../resolvers/CreateEntryResolver";
 
 export const createSchema = async () => {
   const mutations = [
+    CreateEntry,
     ChangePassword,
     CreateUser,
     ForgotPassword,

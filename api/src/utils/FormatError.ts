@@ -2,6 +2,7 @@ import { ArgumentValidationError } from "type-graphql";
 import { GraphQLError, GraphQLFormattedError } from "graphql";
 
 import { AuthenticationError } from "../errors/AuthenticationError";
+import { AuthorizationError } from "../errors/AuthorizationError";
 
 export const formatError: (
   error: GraphQLError
@@ -14,6 +15,14 @@ export const formatError: (
     return {
       ...error,
       message: names[0],
+      extensions: []
+    };
+  }
+
+  if (error.originalError instanceof AuthorizationError) {
+    return {
+      ...error,
+      message: "You are not authorized to proceed.",
       extensions: []
     };
   }

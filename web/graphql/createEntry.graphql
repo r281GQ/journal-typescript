@@ -1,0 +1,8 @@
+mutation CreateEntry($data: CreateEntryParams!) {
+  createEntry(data: $data) {
+    id
+    title
+    body
+    tags
+  }
+}

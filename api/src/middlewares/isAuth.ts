@@ -2,6 +2,7 @@ import { verify } from "jsonwebtoken";
 import { MiddlewareFn } from "type-graphql";
 
 import { ACCESS_TOKEN_SECRET } from "../Environment";
+import { AuthorizationError } from "../errors/AuthorizationError";
 import { ApiContext } from "../types/ApiContext";
 import { Payload } from "../types/Payload";
 
@@ -15,7 +16,7 @@ const getAuthHeader = (context: ApiContext): Payload => {
 
     return payload;
   } catch {
-    throw new Error("Not authorized!");
+    throw new AuthorizationError();
   }
 };
 

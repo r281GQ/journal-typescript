@@ -16,12 +16,26 @@ export type ChangePasswordInput = {
   newPassword: Scalars['String'],
 };
 
+export type CreateEntryParams = {
+  title: Scalars['String'],
+  body: Scalars['String'],
+  tags: Array<Scalars['String']>,
+};
+
 export type CreateUserParams = {
   admin?: Maybe<Scalars['Boolean']>,
   email: Scalars['String'],
   firstName: Scalars['String'],
   lastName: Scalars['String'],
   password: Scalars['String'],
+};
+
+export type Entry = {
+   __typename?: 'Entry',
+  id: Scalars['ID'],
+  title: Scalars['String'],
+  body: Scalars['String'],
+  tags: Array<Scalars['String']>,
 };
 
 export type ForgotPasswordInput = {
@@ -48,6 +62,7 @@ export type Mutation = {
   resetPassword: Scalars['Boolean'],
   sendMail: Scalars['Boolean'],
   verifyEmail: Scalars['Boolean'],
+  createEntry: Entry,
 };
 
 
@@ -80,6 +95,11 @@ export type MutationVerifyEmailArgs = {
   token: Scalars['String']
 };
 
+
+export type MutationCreateEntryArgs = {
+  data: CreateEntryParams
+};
+
 export type Query = {
    __typename?: 'Query',
   users: Array<User>,
@@ -105,6 +125,19 @@ export type User = {
   lastName: Scalars['String'],
   verified: Scalars['Boolean'],
 };
+
+export type CreateEntryMutationVariables = {
+  data: CreateEntryParams
+};
+
+
+export type CreateEntryMutation = (
+  { __typename?: 'Mutation' }
+  & { createEntry: (
+    { __typename?: 'Entry' }
+    & Pick<Entry, 'id' | 'title' | 'body' | 'tags'>
+  ) }
+);
 
 export type CreateUserMutationVariables = {
   data: CreateUserParams
@@ -201,6 +234,41 @@ export type VerifyEmailMutation = (
 );
 
 
+export const CreateEntryDocument = gql`
+    mutation CreateEntry($data: CreateEntryParams!) {
+  createEntry(data: $data) {
+    id
+    title
+    body
+    tags
+  }
+}
+    `;
+export type CreateEntryMutationFn = ApolloReactCommon.MutationFunction<CreateEntryMutation, CreateEntryMutationVariables>;
+
+/**
+ * __useCreateEntryMutation__
+ *
+ * To run a mutation, you first call `useCreateEntryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEntryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEntryMutation, { data, loading, error }] = useCreateEntryMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateEntryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateEntryMutation, CreateEntryMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateEntryMutation, CreateEntryMutationVariables>(CreateEntryDocument, baseOptions);
+      }
+export type CreateEntryMutationHookResult = ReturnType<typeof useCreateEntryMutation>;
+export type CreateEntryMutationResult = ApolloReactCommon.MutationResult<CreateEntryMutation>;
+export type CreateEntryMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateEntryMutation, CreateEntryMutationVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($data: CreateUserParams!) {
   createUser(data: $data) {

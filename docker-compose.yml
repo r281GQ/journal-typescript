@@ -5,8 +5,11 @@ services:
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
       POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_PASSWORD: postgres_password
     volumes:
       - ./api/pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
   redis:
     image: redis:latest
   nginx:
@@ -53,3 +56,4 @@ services:
       - REFRESH_TOKEN_SECRET=secret
       - REFRESH_TOKEN_EXPIRY=10d
       - LOCAL_URL=http://192.168.0.106:3050
+      - SYNC=true

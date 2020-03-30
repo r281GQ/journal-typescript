@@ -1,15 +1,15 @@
 import { MockedProvider, MockedResponse } from "@apollo/react-testing";
 import { render, RenderResult } from "@testing-library/react";
 
-interface Option {
+interface Options {
   mocks: MockedResponse[];
 }
 
 export const wrapInApollo = (
   Component: React.ReactElement,
-  option?: Option
+  option?: Options
 ): RenderResult => {
-  let opt: Option = {
+  let opt: Options = {
     mocks: []
   };
 

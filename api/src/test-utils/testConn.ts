@@ -1,6 +1,6 @@
 import { createConnection } from "typeorm";
 
-import { PG_USER, PG_PASSWORD, PG_HOST } from "./../src/Environment";
+import { PG_USER, PG_PASSWORD, PG_HOST } from "../Environment";
 
 export const testConn = (drop: boolean = false) => {
   return createConnection({
@@ -13,6 +13,6 @@ export const testConn = (drop: boolean = false) => {
     database: "test",
     synchronize: drop,
     dropSchema: drop,
-    entities: [__dirname + "/../src/entities/*.*"]
+    entities: [__dirname + "/../../src/entities/*.*"]
   });
 };

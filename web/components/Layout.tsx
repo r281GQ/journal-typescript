@@ -31,6 +31,9 @@ const Navigation: React.FC = () => {
       <Link href="/emailcontent">
         <a href="/emailcontent">email</a>
       </Link>
+      <Link href="/create_entry">
+        <a href="/create_entry">create entry</a>
+      </Link>
       {data && data.me && (
         <div
           onClick={async () => {

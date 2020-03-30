@@ -1,6 +1,6 @@
 import { Connection } from "typeorm";
 
-import { testConn } from "../../test-utils/testConn";
+import { testConn } from "../test-utils/testConn";
 
 let conn: Connection;
 
