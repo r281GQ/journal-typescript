@@ -8,9 +8,6 @@ import { CreateEntry } from "../resolvers/CreateEntryResolver";
 interface Options<Y = {}> {
   source: string;
   variableValues?: Y;
-  // variableValues?: Maybe<{
-  //   [key: string]: any;
-  // }>;
   contextValue?: any;
 }
 
