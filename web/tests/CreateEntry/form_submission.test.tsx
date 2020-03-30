@@ -1,14 +1,17 @@
+import { wait } from "@apollo/react-testing";
 import userEvent from "@testing-library/user-event";
-import CreateEntry from "../../pages/create_entry";
-
+import { GraphQLError } from "graphql";
 import { useRouter } from "next/router";
 
-import { wrapInApollo } from "../utils/wrapInApollo";
-import { silenceConsoleError } from "../utils/silenceConsoleError";
-import { wait } from "@apollo/react-testing";
 import { CreateEntryDocument } from "../../generated/graphql";
-import { GraphQLError } from "graphql";
+import CreateEntry from "../../pages/create_entry";
+import { silenceConsoleError } from "../utils/silenceConsoleError";
+import { wrapInApollo } from "../utils/wrapInApollo";
 
+/**
+ *  Mocks the modules globally and cannot be reset in this file.
+ *  That means calling the mocking function is shared between all tests.
+ */
 jest.mock("next/router", () => {
   const push = jest.fn();
 
@@ -86,8 +89,11 @@ describe("<CreateEntry /> form submission", () => {
       await wait(1000);
 
       const router = useRouter();
-      expect(router.push).toHaveBeenCalledTimes(1);
+
+      return expect(router.push).toHaveBeenCalledTimes(1);
     }
+
+    fail();
   });
 
   test("submission error shows up", async () => {
@@ -134,8 +140,10 @@ describe("<CreateEntry /> form submission", () => {
 
       let errorMessage = queryByText("not authorized");
 
-      expect(errorMessage).not.toBe(null);
+      return expect(errorMessage).not.toBe(null);
     }
+
+    fail();
   });
 
   test("cancellation redirects to home", async () => {

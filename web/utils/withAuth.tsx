@@ -40,7 +40,7 @@ const withAuth = (Component: NextComponentType, options?: AuthHocOptions) => {
       });
 
       if (!result.data) {
-        throw new Error("Not authorized");
+        throw new Error("not authorized");
       }
 
       if (withEmailVerification && result.data && !result.data.me.verified) {
@@ -49,7 +49,7 @@ const withAuth = (Component: NextComponentType, options?: AuthHocOptions) => {
 
       return { ...originalPageProps };
     } catch (e) {
-      const authorizationError = e.message.includes("Not authorized");
+      const authorizationError = e.message.includes("not authorized");
 
       const redirectUrl = authorizationError
         ? `/login?origin=${context.pathname}`
