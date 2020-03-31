@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ps-cluster-ip
+spec:
+  type: ClusterIP
+  ports:
+    # other objects can reach via this port
+    - port: 5432
+      # this is the exposeed port within the object / container
+      targetPort: 5432
+  selector:
+    component: postgres

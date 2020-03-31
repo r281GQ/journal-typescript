@@ -1,0 +1,53 @@
+# kubernetes default resources
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # this is for logging / debugging
+  name: api-deployment
+spec:
+  # how many instances
+  replicas: 1
+  # this matches the pod label
+  selector:
+    matchLabels:
+      component: api
+  # this describes the pod definition
+  template:
+    metadata:
+      labels:
+        component: api
+    spec:
+      containers:
+        - name: client
+          image: dockerquark/journal-api-prod
+          ports:
+            - containerPort: 4000
+          env:
+            - name: REDISHOST
+              value: redis-cluster-ip
+            - name: REDISPORT
+              value: "6379"
+            - name: PGUSER
+              value: postgres
+            - name: PGHOST
+              value: ps-cluster-ip
+            - name: PGDATABASE
+              value: postgres
+            - name: PGPASSWORD
+              value: postgres_password
+            - name: PGPORT
+              value: "5432"
+            - name: SALT
+              value: "10"
+            - name: ACCESS_TOKEN_EXPIRY
+              value: 10m
+            - name: ACCESS_TOKEN_SECRET
+              value: secret
+            - name: REFRESH_TOKEN_EXPIRY
+              value: 30d
+            - name: REFRESH_TOKEN_SECRET
+              value: secret
+            - name: SELF_URL
+              value: http://192.168.64.4
+            - name: SYNC
+              value: "true"
