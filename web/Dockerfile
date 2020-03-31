@@ -1,6 +1,7 @@
 FROM node:alpine as builder
 
-ENV STAGING_URL=http://192.168.64.3
+ENV STAGING_URL=http://192.168.64.4
+# ENV STAGING_URL=https://journal-typescript.app
 
 WORKDIR /app
 
