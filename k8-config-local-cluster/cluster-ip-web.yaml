@@ -5,9 +5,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    # other objects can reach via this port
     - port: 3000
-      # this is the exposeed port within the object / container
       targetPort: 3000
   selector:
     component: web

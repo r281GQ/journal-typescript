@@ -1,17 +1,12 @@
-# kubernetes default resources
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  # this is for logging / debugging
   name: api-deployment
 spec:
-  # how many instances
   replicas: 1
-  # this matches the pod label
   selector:
     matchLabels:
       component: api
-  # this describes the pod definition
   template:
     metadata:
       labels:
@@ -29,14 +24,15 @@ spec:
               value: "6379"
             - name: PGUSER
               value: postgres
-            # - name: PGHOST
-            #   value: ps-cluster-ip
             - name: PGHOST
               value: 127.0.0.1
             - name: PGDATABASE
               value: postgres
             - name: PGPASSWORD
-              value: postgres_password
+              valueFrom:
+                secretKeyRef:
+                  name: database
+                  key: PGPASSWORD
             - name: PGPORT
               value: "5432"
             - name: SALT
@@ -44,35 +40,36 @@ spec:
             - name: ACCESS_TOKEN_EXPIRY
               value: 10m
             - name: ACCESS_TOKEN_SECRET
-              value: secret
+              valueFrom:
+                secretKeyRef:
+                  name: jwt
+                  key: ACCESS_TOKEN_SECRET
             - name: REFRESH_TOKEN_EXPIRY
               value: 30d
             - name: REFRESH_TOKEN_SECRET
-              value: secret
+              valueFrom:
+                secretKeyRef:
+                  name: jwt
+                  key: REFRESH_TOKEN_SECRET
             - name: SELF_URL
               value: http://journal-typescript.app
             - name: SYNC
               value: "false"
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.14
-          command: [
+          command:
+            [
               "/cloud_sql_proxy",
               "-instances=journal-271913:europe-west2:journal-ps-db=tcp:5432",
-              # If running on a VPC, the Cloud SQL proxy can connect via Private IP. See:
-              # https://cloud.google.com/sql/docs/mysql/private-ip for more info.
-              # "-ip_address_types=PRIVATE",
               "-credential_file=/secrets/cloudsql/credentials.json",
             ]
-          # [START cloudsql_security_context]
           securityContext:
             runAsUser: 2 # non-root user
             allowPrivilegeEscalation: false
-          # [END cloudsql_security_context]
           volumeMounts:
             - name: cloudsql-instance-credentials
               mountPath: /secrets/cloudsql
               readOnly: true
-        # [END proxy_container]
       volumes:
         - name: cloudsql-instance-credentials
           secret:

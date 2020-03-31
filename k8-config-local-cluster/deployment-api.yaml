@@ -1,17 +1,12 @@
-# kubernetes default resources
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  # this is for logging / debugging
   name: api-deployment
 spec:
-  # how many instances
   replicas: 1
-  # this matches the pod label
   selector:
     matchLabels:
       component: api
-  # this describes the pod definition
   template:
     metadata:
       labels:
@@ -34,7 +29,10 @@ spec:
             - name: PGDATABASE
               value: postgres
             - name: PGPASSWORD
-              value: postgres_password
+              valueFrom:
+                secretKeyRef:
+                  name: database
+                  key: PGPASSWORD
             - name: PGPORT
               value: "5432"
             - name: SALT
@@ -42,11 +40,17 @@ spec:
             - name: ACCESS_TOKEN_EXPIRY
               value: 10m
             - name: ACCESS_TOKEN_SECRET
-              value: secret
+              valueFrom:
+                secretKeyRef:
+                  name: jwt
+                  key: ACCESS_TOKEN_SECRET
             - name: REFRESH_TOKEN_EXPIRY
               value: 30d
             - name: REFRESH_TOKEN_SECRET
-              value: secret
+              valueFrom:
+                secretKeyRef:
+                  name: jwt
+                  key: REFRESH_TOKEN_SECRET
             - name: SELF_URL
               value: http://192.168.64.4
             - name: SYNC

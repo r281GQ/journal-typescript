@@ -1,16 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  # this is for logging / debugging
   name: web-deployment
 spec:
-  # how many instances
   replicas: 1
-  # this matches the pod label
   selector:
     matchLabels:
       component: web
-  # this describes the pod definition
   template:
     metadata:
       labels:
@@ -21,10 +17,3 @@ spec:
           image: dockerquark/journal-web-prod
           ports:
             - containerPort: 3000
-          env:
-            - name: USE_STAGING
-              value: "false"
-            - name: LOCAL_URL
-              value: http://192.168.64.3
-            - name: STAGING_URL
-              value: http://192.168.64.3

@@ -1,16 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  # this is for logging / debugging
   name: ps-deployment
 spec:
-  # how many instances
   replicas: 1
-  # this matches the pod label
   selector:
     matchLabels:
       component: postgres
-  # this describes the pod definition
   template:
     metadata:
       labels:
@@ -26,8 +22,6 @@ spec:
           ports:
             - containerPort: 5432
           env:
-            - name: POSTGRES_HOST_AUTH_METHOD
-              value: trust
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
