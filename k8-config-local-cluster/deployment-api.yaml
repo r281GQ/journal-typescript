@@ -29,10 +29,8 @@ spec:
               value: "6379"
             - name: PGUSER
               value: postgres
-            # - name: PGHOST
-            #   value: ps-cluster-ip
             - name: PGHOST
-              value: 127.0.0.1
+              value: ps-cluster-ip
             - name: PGDATABASE
               value: postgres
             - name: PGPASSWORD
@@ -50,30 +48,6 @@ spec:
             - name: REFRESH_TOKEN_SECRET
               value: secret
             - name: SELF_URL
-              value: http://journal-typescript.app
+              value: http://192.168.64.4
             - name: SYNC
-              value: "false"
-        - name: cloudsql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:1.14
-          command: [
-              "/cloud_sql_proxy",
-              "-instances=journal-271913:europe-west2:journal-ps-db=tcp:5432",
-              # If running on a VPC, the Cloud SQL proxy can connect via Private IP. See:
-              # https://cloud.google.com/sql/docs/mysql/private-ip for more info.
-              # "-ip_address_types=PRIVATE",
-              "-credential_file=/secrets/cloudsql/credentials.json",
-            ]
-          # [START cloudsql_security_context]
-          securityContext:
-            runAsUser: 2 # non-root user
-            allowPrivilegeEscalation: false
-          # [END cloudsql_security_context]
-          volumeMounts:
-            - name: cloudsql-instance-credentials
-              mountPath: /secrets/cloudsql
-              readOnly: true
-        # [END proxy_container]
-      volumes:
-        - name: cloudsql-instance-credentials
-          secret:
-            secretName: cloudsql-instance-credentials
+              value: "true"

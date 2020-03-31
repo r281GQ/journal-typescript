@@ -1,4 +1,4 @@
-import { ENV, STAGING_URL } from "../Environment";
+import { ENV, SELF_URL } from "../Environment";
 
 export const createUrl = (suffix?: string) => {
   let url = "";
@@ -8,7 +8,11 @@ export const createUrl = (suffix?: string) => {
   }
 
   if (ENV === "test") {
-    url = STAGING_URL + suffix;
+    url = SELF_URL + suffix;
+  }
+
+  if (ENV === "production") {
+    url = SELF_URL + suffix;
   }
 
   return url;

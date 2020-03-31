@@ -8,12 +8,12 @@ import { verify } from "jsonwebtoken";
 import { createConnection } from "typeorm";
 import {
   ENV,
-  LOCAL_URL,
   PG_DATABASE,
   PG_HOST,
   PG_PASSWORD,
   PG_USER,
   REFRESH_TOKEN_SECRET,
+  SELF_URL,
   SYNC
 } from "./Environment";
 import { createSchema } from "./utils/CreateSchema";
@@ -22,14 +22,7 @@ import { formatError } from "./utils/FormatError";
 import { reportBug } from "./utils/ReportBug";
 import { Payload } from "./types/Payload";
 
-const LOCAL_DEVELOPMENT = "http://localhost:3050";
-const DEPLOYEMNT = "https://journal-typescript.app";
-"dfsdfs;";
-
-const whitelist =
-  ENV === "development"
-    ? [LOCAL_DEVELOPMENT, DEPLOYEMNT]
-    : [LOCAL_DEVELOPMENT, DEPLOYEMNT];
+const CORS_WHITE_LIST = [SELF_URL];
 
 const app = Express();
 
@@ -37,10 +30,10 @@ app.use(
   cors({
     credentials: true,
     origin: (origin, callback) => {
-      if (whitelist.indexOf(origin!) !== -1 || !origin) {
+      if (CORS_WHITE_LIST.indexOf(origin!) !== -1 || !origin) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        callback(new Error("Not allowed by CORS."));
       }
     }
   })
@@ -100,15 +93,7 @@ const connectToDatabase = async () => {
 
 const main = async () => {
   try {
-    const connection = await connectToDatabase();
-
-    try {
-      await connection?.query(
-        `kCREATE TABLE "user" ("id" SERIAL NOT NULL, "role" text NOT NULL DEFAULT 'USER', "email" text NOT NULL, "firstName" character varying NOT NULL, "lastName" character varying NOT NULL, "password" character varying NOT NULL, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))"`
-      );
-    } catch (e) {
-      console.log(e);
-    }
+    await connectToDatabase();
 
     const apolloServer = new ApolloServer({
       schema: await createSchema(),
@@ -127,7 +112,7 @@ const main = async () => {
   }
 
   app.listen(4000, () => {
-    console.log("app running");
+    console.log("API is listening on port 4000...");
   });
 };
 
