@@ -52,7 +52,7 @@ spec:
                   name: jwt
                   key: REFRESH_TOKEN_SECRET
             - name: SELF_URL
-              value: http://journal-typescript.app
+              value: https://journal-typescript.app
             - name: SYNC
               value: "false"
         - name: cloudsql-proxy
