@@ -25,7 +25,8 @@
     "start": "ts-node src/index.ts",
     "dev": "ts-node-dev src/index.ts",
     "db:setup": "ts-node ./src/test-utils/setup.ts",
-    "test": "npm run db:setup && jest --watchAll"
+    "test": "npm run db:setup && jest --watchAll",
+    "typeorm": "ts-node ./node_modules/typeorm/cli.js"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",

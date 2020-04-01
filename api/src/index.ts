@@ -6,23 +6,17 @@ import cors from "cors";
 import Express from "express";
 import { verify } from "jsonwebtoken";
 import { createConnection } from "typeorm";
-import {
-  ENV,
-  PG_DATABASE,
-  PG_HOST,
-  PG_PASSWORD,
-  PG_USER,
-  REFRESH_TOKEN_SECRET,
-  SELF_URL,
-  SYNC
-} from "./Environment";
+import { ENV, REFRESH_TOKEN_SECRET, SELF_URL } from "./Environment";
 import { createSchema } from "./utils/CreateSchema";
 import { createAccessToken } from "./utils/CreateAccessToken";
 import { formatError } from "./utils/FormatError";
 import { reportBug } from "./utils/ReportBug";
 import { Payload } from "./types/Payload";
 
-const CORS_WHITE_LIST = [SELF_URL];
+const LOCAL_HOST = "http://localhost:3050";
+const LOCAL_HOST_WIFI = "http://192.168.0.106:3050";
+
+const CORS_WHITE_LIST = [SELF_URL, LOCAL_HOST, LOCAL_HOST_WIFI];
 
 const app = Express();
 
@@ -62,18 +56,7 @@ const connectToDatabase = async () => {
 
   while (retryAttempts > 0 && !connected) {
     try {
-      const connection = await createConnection({
-        name: "default",
-        type: "postgres",
-        host: PG_HOST,
-        port: 5432,
-        username: PG_USER,
-        password: PG_PASSWORD,
-        database: PG_DATABASE,
-        synchronize: SYNC,
-        logging: ENV === "development" ? true : false,
-        entities: ["src/entities/*.*"]
-      });
+      const connection = await createConnection();
 
       connected = true;
 
