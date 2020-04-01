@@ -42,13 +42,19 @@ services:
       - /app/node_modules
       - ./api:/app
     environment:
+      - TYPEORM_ENTITIES=src/entities/*.*
+      - TYPEORM_MIGRATIONS=src/migrations/*.*
+      - TYPEORM_MIGRATIONS_DIR=src/migrations
+      - TYPEORM_CONNECTION=postgres
+      - TYPEORM_HOST=db
+      - TYPEORM_USERNAME=postgres
+      - TYPEORM_PASSWORD=postgres_password
+      - TYPEORM_DATABASE=postgres
+      - TYPEORM_PORT=5432
+      - TYPEORM_SYNCHRONIZE=false
+      - TYPEORM_LOGGING=true
       - REDISHOST=redis
       - REDISPORT=6379
-      - PGUSER=postgres
-      - PGHOST=db
-      - PGDATABASE=postgres
-      - PGPASSWORD=postgres_password
-      - PGPORT=5432
       - SALT=1
       - ACCESS_TOKEN_SECRET=secret
       - ACCESS_TOKEN_EXPIRY=10d
