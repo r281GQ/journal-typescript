@@ -22,18 +22,24 @@ spec:
               value: redis-cluster-ip
             - name: REDISPORT
               value: "6379"
-            - name: PGUSER
+            - name: TYPEORM_CONNECTION
               value: postgres
-            - name: PGHOST
+            - name: TYPEORM_USERNAME
+              value: postgres
+            - name: TYPEORM_HOST
               value: 127.0.0.1
-            - name: PGDATABASE
+            - name: TYPEORM_SYNCHRONIZE
+              value: "false"
+            - name: TYPEORM_LOGGING
+              value: "false"
+            - name: TYPEORM_DATABASE
               value: postgres
-            - name: PGPASSWORD
+            - name: TYPEORM_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: database
                   key: PGPASSWORD
-            - name: PGPORT
+            - name: TYPEORM_PORT
               value: "5432"
             - name: SALT
               value: "10"
