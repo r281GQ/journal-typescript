@@ -4,6 +4,7 @@ services:
     image: postgres:latest
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres_password
     volumes:
       - ./api/pgdata:/var/lib/postgresql/data
@@ -51,7 +52,7 @@ services:
       - TYPEORM_PASSWORD=postgres_password
       - TYPEORM_DATABASE=postgres
       - TYPEORM_PORT=5432
-      - TYPEORM_SYNCHRONIZE=false
+      - TYPEORM_SYNCHRONIZE=true
       - TYPEORM_LOGGING=true
       - REDISHOST=redis
       - REDISPORT=6379
@@ -61,4 +62,3 @@ services:
       - REFRESH_TOKEN_SECRET=secret
       - REFRESH_TOKEN_EXPIRY=10d
       - SELF_URL=http://localhost:3050
-      - SYNC=true
