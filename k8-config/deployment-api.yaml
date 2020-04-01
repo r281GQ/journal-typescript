@@ -18,6 +18,12 @@ spec:
           ports:
             - containerPort: 4000
           env:
+            - name: TYPEORM_ENTITIES
+              value: src/entities/*.*
+            - name: TYPEORM_MIGRATIONS
+              value: src/migrations/*.*
+            - name: TYPEORM_MIGRATIONS_DIR
+              value: src/migrations
             - name: REDISHOST
               value: redis-cluster-ip
             - name: REDISPORT
