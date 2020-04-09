@@ -16,7 +16,13 @@ import { Payload } from "./types/Payload";
 const LOCAL_HOST = "http://localhost:3050";
 const LOCAL_HOST_WIFI = "http://192.168.0.106:3050";
 
-const CORS_WHITE_LIST = [SELF_URL, LOCAL_HOST, LOCAL_HOST_WIFI];
+const CORS_WHITE_LIST = [
+  "https://www.journal-typescript.app",
+  "https://journal-typescript.app",
+  SELF_URL,
+  LOCAL_HOST,
+  LOCAL_HOST_WIFI,
+];
 
 const app = Express();
 
@@ -29,7 +35,7 @@ app.use(
       } else {
         callback(new Error("Not allowed by CORS."));
       }
-    }
+    },
   })
 );
 
@@ -42,7 +48,7 @@ app.post("/refresh_token", (request, response) => {
     const payload = verify(jid, REFRESH_TOKEN_SECRET) as Payload;
 
     return response.send({
-      token: createAccessToken(payload)
+      token: createAccessToken(payload),
     });
   }
 
@@ -65,7 +71,7 @@ const connectToDatabase = async () => {
       retryAttempts--;
 
       if (ENV === "development" && /ECONNREFUSED/g.test(e.message)) {
-        await new Promise(resolve => setTimeout(() => resolve(), 10000));
+        await new Promise((resolve) => setTimeout(() => resolve(), 10000));
       }
 
       reportBug(e);
@@ -83,12 +89,12 @@ const main = async () => {
       context: ({ req, res }) => {
         return { req, res };
       },
-      formatError: formatError
+      formatError: formatError,
     });
 
     apolloServer.applyMiddleware({
       app,
-      cors: false
+      cors: false,
     });
   } catch (e) {
     reportBug(e);
