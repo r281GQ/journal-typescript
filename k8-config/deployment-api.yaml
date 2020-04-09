@@ -72,7 +72,7 @@ spec:
           command:
             [
               "/cloud_sql_proxy",
-              "-instances=journal-271913:europe-west2:journal-ps-db=tcp:5432",
+              "-instances=journal-typescript:europe-west1:journal-typescript-database=tcp:5432",
               "-credential_file=/secrets/cloudsql/credentials.json",
             ]
           securityContext:
