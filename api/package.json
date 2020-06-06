@@ -5,7 +5,7 @@
   "author": "Endre Vegh",
   "license": "MIT",
   "dependencies": {
-    "apollo-server-express": "^2.9.16",
+    "apollo-server-express": "^2.14.2",
     "bcrypt": "^3.0.7",
     "class-validator": "^0.11.0",
     "cookie-parser": "^1.4.4",
